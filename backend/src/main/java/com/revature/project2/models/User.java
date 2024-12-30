@@ -1,13 +1,10 @@
 package com.revature.project2.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.List;
 
 @Component
 @Entity
@@ -27,8 +24,11 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    
+    @Column(nullable = false)
     private String role = "employee";
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Envelope> envelopes;
 
     public User() {}
 
@@ -48,6 +48,7 @@ public class User {
     public String getFirstName() { return firstName; }
     public String getLastName() { return lastName; }
     public String getRole() { return role; }
+    public List<Envelope> getEnvelopes() { return envelopes; }
 
     public void setUserId(int userId) { this.userId = userId; }
     public void setUsername(String username) { this.username = username; }
@@ -56,6 +57,7 @@ public class User {
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
     public void setRole(String role) { this.role = role; }
+    public void setEnvelopes(List<Envelope> envelopes) { this.envelopes = envelopes; }
 
     @Override
     public String toString() {
