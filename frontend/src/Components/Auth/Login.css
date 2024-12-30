@@ -1,0 +1,89 @@
+:root {
+  --green: #46C377;
+  --dark-green: #23A455;
+  --light-green: #23a45486;
+  --purple: #8b4dfe;
+  --white: #ffffff;
+  --gray: #d9d9d9;
+}
+
+/* Main Container */
+.login-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 30px;
+}
+
+/* Left Side: Text */
+.login-text {
+  width: 45%;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.login-text h3 {
+  font-weight: bold;
+  color: var(--dark-green);
+}
+
+.login-text p {
+  line-height: 1.6;
+  font-size: 1.5rem;
+}
+
+/* Right Side: Form */
+.login-form {
+  width: 45%;
+  padding: 30px 30px 50px 30px;
+  background-color: var(--light-green);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 8px;
+  text-align: center;
+}
+
+.login-form h4 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.textfield {
+  margin: 10px 0;
+  width: 100%; /* Full width */
+}
+
+.textfield input {
+  background-color: var(--gray); /* White background for text input */
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.button1 {
+  background-color: var(--purple) !important;
+  color: var(--white);
+  border-radius: 30px !important; /* Oval-shaped button */
+  width: 50% !important;
+  padding: 10px 20px !important;
+  font-weight: bold;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for button */
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.signup-link {
+  text-decoration: none;
+  color: var(--purple);
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+.highlight-text {
+  color: var(--purple);
+  font-weight: bold;
+}
