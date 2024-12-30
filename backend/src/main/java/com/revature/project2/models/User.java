@@ -30,7 +30,12 @@ public class User {
     @JsonIgnore
     private List<Envelope> envelopes;
 
-    public User() {}
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Envelope> envelopes;
+
+    public User() {
+    }
 
     public User(String username, String password, String email, String firstName, String lastName, String role) {
         this.username = username;
@@ -61,9 +66,9 @@ public class User {
 
     @Override
     public String toString() {
-        return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", email=" + email
+        return "User [userId=" + userId + ", username=" + username + ", email=" + email
                 + ", firstName=" + firstName + ", lastName=" + lastName + ", role=" + role + "]";
     }
 
-    
+
 }
