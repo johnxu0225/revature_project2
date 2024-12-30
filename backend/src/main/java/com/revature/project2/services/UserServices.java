@@ -1,25 +1,26 @@
 package com.revature.project2.services;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.revature.project2.models.DTOs.IncomingLogin;
+import com.revature.project2.models.User;
+import com.revature.project2.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.revature.project2.models.User;
-import com.revature.project2.models.DTOs.IncomingLogin;
-import com.revature.project2.repositories.UserRepository;
+import java.util.Optional;
 
 @Service
 public class UserServices {
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
+    private final Logger logger = LoggerFactory.getLogger(UserServices.class);
 
-    @Autowired
     public UserServices(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
 
     public User register(User user) {
+        logger.info("Registering user: " + user);
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new IllegalArgumentException("First name cannot be blank!");
         }
@@ -40,6 +41,7 @@ public class UserServices {
     }
 
     public User login(IncomingLogin user) {
+        logger.info("Logging in user: " + user);
         Optional<User> foundUser = userRepo.findByUsernameAndPassword(user.username(), user.password());
         if (foundUser.isEmpty()) {
             throw new IllegalArgumentException("Error: Username or password is incorrect");
