@@ -30,10 +30,6 @@ public class User {
     @JsonIgnore
     private List<Envelope> envelopes;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<Envelope> envelopes;
-
     public User() {
     }
 
