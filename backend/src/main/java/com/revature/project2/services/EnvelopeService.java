@@ -40,7 +40,7 @@ public class EnvelopeService {
 
         Envelope envelope = new Envelope();
         envelope.setEnvelopeDescription(envelopeDTO.envelopeDescription());
-        envelope.setAmount(envelopeDTO.amount());
+        envelope.setBalance(envelopeDTO.amount());
         envelope.setMaxLimit(envelopeDTO.maxLimit());
         envelope.setUser(user.get());
 
@@ -90,16 +90,16 @@ public class EnvelopeService {
         if (transferFundDTO.amount() <= 0) {
             throw new RuntimeException("Amount must be greater than 0");
         }
-        if (fromEnvelope.get().getAmount() < transferFundDTO.amount()) {
+        if (fromEnvelope.get().getBalance() < transferFundDTO.amount()) {
             throw new RuntimeException("Insufficient funds in envelope with id: " + transferFundDTO.fromId());
         }
 
-        if (toEnvelope.get().getAmount() + transferFundDTO.amount() > toEnvelope.get().getMaxLimit()) {
+        if (toEnvelope.get().getBalance() + transferFundDTO.amount() > toEnvelope.get().getMaxLimit()) {
             throw new RuntimeException("Amount exceeds max limit of envelope with id: " + transferFundDTO.toId());
         }
 
-        fromEnvelope.get().setAmount(fromEnvelope.get().getAmount() - transferFundDTO.amount());
-        toEnvelope.get().setAmount(toEnvelope.get().getAmount() + transferFundDTO.amount());
+        fromEnvelope.get().setBalance(fromEnvelope.get().getBalance() - transferFundDTO.amount());
+        toEnvelope.get().setBalance(toEnvelope.get().getBalance() + transferFundDTO.amount());
 
         envelopeRepository.save(fromEnvelope.get());
         envelopeRepository.save(toEnvelope.get());

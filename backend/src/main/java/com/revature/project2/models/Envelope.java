@@ -1,29 +1,100 @@
 package com.revature.project2.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+import java.util.List;
+
+@Component
 @Entity
+@Table(name = "envelope")
 public class Envelope {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer envelopeId;
+    private int envelopeId;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     private User user;
     @Column(nullable = false)
     private String envelopeDescription;
     @Column(nullable = false)
-    private Double amount;
+    private double balance;
     @Column(nullable = false)
-    private Double maxLimit;
+    private double maxLimit;
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Envelope_History> envelopeHistories;
+
+    public Envelope() {
+    }
+
+    public Envelope(int envelopeId, User user, String envelopeDescription, double balance, double maxLimit) {
+        this.envelopeId = envelopeId;
+        this.user = user;
+        this.envelopeDescription = envelopeDescription;
+        this.balance = balance;
+        this.maxLimit = maxLimit;
+    }
+
+    public int getEnvelopeId() {
+        return envelopeId;
+    }
+
+    public void setEnvelopeId(int envelopeId) {
+        this.envelopeId = envelopeId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getEnvelopeDescription() {
+        return envelopeDescription;
+    }
+
+    public void setEnvelopeDescription(String envelopeDescription) {
+        this.envelopeDescription = envelopeDescription;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public double getMaxLimit() {
+        return maxLimit;
+    }
+
+    public void setMaxLimit(double maxLimit) {
+        this.maxLimit = maxLimit;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public List<Envelope_History> getEnvelopeHistories() {
+        return envelopeHistories;
+    }
+
+    public void setEnvelopeHistories(List<Envelope_History> envelopeHistories) {
+        this.envelopeHistories = envelopeHistories;
+    }
 
     @Override
     public String toString() {
@@ -31,8 +102,8 @@ public class Envelope {
                 "envelopeId=" + envelopeId +
                 ", user=" + user +
                 ", envelopeDescription='" + envelopeDescription + '\'' +
-                ", amount=" + amount +
-                ", maxLimit=" + maxLimit +
+                ", balance=" + balance +
+                ", max=" + maxLimit +
                 '}';
     }
 }
