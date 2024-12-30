@@ -24,8 +24,11 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-
+    @Column(nullable = false)
     private String role = "employee";
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Envelope> envelopes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
@@ -43,61 +46,23 @@ public class User {
         this.role = role;
     }
 
-    public int getUserId() {
-        return userId;
-    }
+    public int getUserId() { return userId; }
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+    public String getEmail() { return email; }
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+    public String getRole() { return role; }
+    public List<Envelope> getEnvelopes() { return envelopes; }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public void setUserId(int userId) { this.userId = userId; }
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
+    public void setEmail(String email) { this.email = email; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setRole(String role) { this.role = role; }
+    public void setEnvelopes(List<Envelope> envelopes) { this.envelopes = envelopes; }
 
     @Override
     public String toString() {
