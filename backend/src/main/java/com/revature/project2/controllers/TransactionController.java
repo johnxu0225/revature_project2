@@ -26,4 +26,13 @@ public class TransactionController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+    @PatchMapping("/transaction/description/{id}")
+    public ResponseEntity<?> updateTransactionDescription(@PathVariable Integer id, @RequestBody String newDescription) {
+        try {
+            return ResponseEntity.ok(transactionService.updateTransactionDescription(id, newDescription));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
 }

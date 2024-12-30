@@ -20,4 +20,11 @@ public class TransactionService {
         transaction.setTitle(newTitle);
         return transactionRepository.save(transaction);
     }
+
+    public Transaction updateTransactionDescription(Integer id, String newDescription) {
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+        transaction.setTransaction_description(newDescription);
+        return transactionRepository.save(transaction);
+    }
 }
