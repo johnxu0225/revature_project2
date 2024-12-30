@@ -1,12 +1,12 @@
 package com.revature.project2.controllers;
 
+import com.revature.project2.models.Transaction;
 import com.revature.project2.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class TransactionController {
@@ -35,4 +35,21 @@ public class TransactionController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+    @PostMapping("/transaction")
+    public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
+        try {
+            return ResponseEntity.ok(transactionService.createTransaction(transaction));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    //TODO: Spring Security
+    @GetMapping("/transactions")
+    public ResponseEntity<List<Transaction>> getTransactions() {
+        List<Transaction> transactions = transactionService.getAllTransactions();
+        return ResponseEntity.ok(transactions);
+    }
+
 }
