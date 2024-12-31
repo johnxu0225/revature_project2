@@ -20,18 +20,18 @@ public class TransactionController {
     }
 
     @PatchMapping("/transactions/title/{id}")
-    public ResponseEntity<?> updateTransactionTitle(@PathVariable Integer id, @RequestBody String newTitle) {
+    public ResponseEntity<?> updateTransactionTitle(@PathVariable Integer id, @RequestBody TransactionDTO transactionDTO) {
         try {
-            return ResponseEntity.ok(transactionService.updateTransactionTitle(id, newTitle));
+            return ResponseEntity.ok(transactionService.updateTransactionTitle(id, transactionDTO.getTitle()));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
     @PatchMapping("/transactions/description/{id}")
-    public ResponseEntity<?> updateTransactionDescription(@PathVariable Integer id, @RequestBody String newDescription) {
+    public ResponseEntity<?> updateTransactionDescription(@PathVariable Integer id, @RequestBody TransactionDTO transactionDTO) {
         try {
-            return ResponseEntity.ok(transactionService.updateTransactionDescription(id, newDescription));
+            return ResponseEntity.ok(transactionService.updateTransactionDescription(id, transactionDTO.getTransactionDescription()));
         } catch (Exception e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
