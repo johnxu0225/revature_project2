@@ -1,9 +1,9 @@
 package com.revature.project2.services;
 
 import com.revature.project2.exceptions.BusinessException;
-import com.revature.project2.models.DTOs.TransactionDto;
+import com.revature.project2.models.DTOs.TransactionDTO;
 import com.revature.project2.models.Transaction;
-import com.revature.project2.models.mappers.TransactionDtoMapper;
+import com.revature.project2.models.mappers.TransactionDTOMapper;
 import com.revature.project2.repositories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +16,11 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
-    private final TransactionDtoMapper transactionDtoMapper;
+    private final TransactionDTOMapper transactionDTOMapper;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionDtoMapper transactionDtoMapper) {
+    public TransactionService(TransactionRepository transactionRepository, TransactionDTOMapper transactionDTOMapper) {
         this.transactionRepository = transactionRepository;
-        this.transactionDtoMapper = transactionDtoMapper;
+        this.transactionDTOMapper = transactionDTOMapper;
     }
 
     public Transaction updateTransactionTitle(Integer id, String newTitle) {
@@ -66,11 +66,11 @@ public class TransactionService {
      * Updates the category of a transaction based on its ID.
      *
      * @param id          The ID of the transaction to be updated.
-     * @param transactionDto The new category to set for the transaction.
-     * @return The updated transactionDto object after saving it to the repository.
+     * @param transactionDTO The new category to set for the transaction.
+     * @return The updated transactionDTO object after saving it to the repository.
      * @throws BusinessException If the transaction with the given ID is not found.
      */
-    public TransactionDto updateTransactionCategory(Integer id, TransactionDto transactionDto) {
+    public TransactionDTO updateTransactionCategory(Integer id, TransactionDTO transactionDTO) {
 
         // Log the update operation for tracking
         logger.info("Updating transaction Category for transaction with id: " + id);
@@ -80,13 +80,13 @@ public class TransactionService {
                 .orElseThrow(() -> new BusinessException(654, "Transaction not found"));
 
         // Update the category of the transaction
-        if (transactionDto.getCategory() == null || transactionDto.getCategory().isEmpty()) {
+        if (transactionDTO.getCategory() == null || transactionDTO.getCategory().isEmpty()) {
             throw new BusinessException(607,"Transaction category cannot be null or empty");
         }
-        transaction.setCategory(transactionDto.getCategory());
+        transaction.setCategory(transactionDTO.getCategory());
 
-        // Save the updated transaction and return Dto to the controller
-        return transactionDtoMapper.entityToDto(transactionRepository.save(transaction)) ;
+        // Save the updated transaction and return DTO to the controller
+        return transactionDTOMapper.entityToDTO(transactionRepository.save(transaction)) ;
     }
 
 }

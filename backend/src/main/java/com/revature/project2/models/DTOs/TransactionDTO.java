@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 // Data Transfer Object (DTO) for representing a transaction.
-public class TransactionDto {
+public class TransactionDTO {
 
     // Unique identifier for the transaction.
     private int transactionId;
@@ -14,7 +14,7 @@ public class TransactionDto {
     private String title;
 
     // Description of the transaction (e.g., what the transaction was for).
-    private String transaction_description;
+    private String transactionDescription;
 
     // DTO representing the envelope associated with this transaction.
     private EnvelopeDTO envelopeDTO;
@@ -26,10 +26,10 @@ public class TransactionDto {
     private String category;
 
     // Amount of money involved in the transaction.
-    private double transaction_amount;
+    private double transactionAmount;
 
     // List of envelope histories associated with this transaction.
-    private List<EnvelopeHistoryDto> envelopeHistories;
+    private List<EnvelopeHistoryDTO> envelopeHistories;
 
     // Getter method for transactionId.
     public int getTransactionId() {
@@ -51,14 +51,14 @@ public class TransactionDto {
         this.title = title;
     }
 
-    // Getter method for transaction_description.
-    public String getTransaction_description() {
-        return transaction_description;
+    // Getter method for transactionDescription.
+    public String getTransactionDescription() {
+        return transactionDescription;
     }
 
-    // Setter method for transaction_description.
-    public void setTransaction_description(String transaction_description) {
-        this.transaction_description = transaction_description;
+    // Setter method for transactionDescription.
+    public void setTransactionDescription(String transactionDescription) {
+        this.transactionDescription = transactionDescription;
     }
 
     // Getter method for envelopeDTO.
@@ -91,23 +91,23 @@ public class TransactionDto {
         this.category = category;
     }
 
-    // Getter method for transaction_amount.
-    public double getTransaction_amount() {
-        return transaction_amount;
+    // Getter method for transactionAmount.
+    public double getTransactionAmount() {
+        return transactionAmount;
     }
 
-    // Setter method for transaction_amount.
-    public void setTransaction_amount(double transaction_amount) {
-        this.transaction_amount = transaction_amount;
+    // Setter method for transactionAmount.
+    public void setTransactionAmount(double transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     // Getter method for envelopeHistories.
-    public List<EnvelopeHistoryDto> getEnvelopeHistories() {
+    public List<EnvelopeHistoryDTO> getEnvelopeHistories() {
         return envelopeHistories;
     }
 
     // Setter method for envelopeHistories.
-    public void setEnvelopeHistories(List<EnvelopeHistoryDto> envelopeHistories) {
+    public void setEnvelopeHistories(List<EnvelopeHistoryDTO> envelopeHistories) {
         this.envelopeHistories = envelopeHistories;
     }
 }

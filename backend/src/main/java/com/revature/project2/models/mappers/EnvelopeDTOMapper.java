@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * mapping logic for Envelope and EnvelopeDTO objects.
  */
 @Component
-public class EnvelopeDtoMapper extends AbstractMapper<Envelope, EnvelopeDTO> {
+public class EnvelopeDTOMapper extends AbstractMapper<Envelope, EnvelopeDTO> {
 
     /**
      * Converts an EnvelopeDTO to an Envelope entity.
@@ -32,7 +32,7 @@ public class EnvelopeDtoMapper extends AbstractMapper<Envelope, EnvelopeDTO> {
      * @return The corresponding EnvelopeDTO.
      */
     @Override
-    public EnvelopeDTO entityToDto(Envelope entity) {
+    public EnvelopeDTO entityToDTO(Envelope entity) {
         // Currently returning null, implement logic to map Envelope to EnvelopeDTO
         return null;
     }

@@ -23,5 +23,5 @@ public abstract class AbstractMapper<U, V> {
      * @param entity the entity to convert
      * @return the corresponding DTO
      */
-    public abstract V entityToDto(U entity);
+    public abstract V entityToDTO(U entity);
 }
