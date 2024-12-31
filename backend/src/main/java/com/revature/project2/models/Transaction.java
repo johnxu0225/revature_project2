@@ -29,7 +29,7 @@ public class Transaction {
     private double transaction_amount;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Envelope_History> envelopeHistories;
+    private List<EnvelopeHistory> envelopeHistories;
 
     public Transaction() {
     }
@@ -100,11 +100,11 @@ public class Transaction {
         this.transaction_amount = transaction_amount;
     }
 
-    public List<Envelope_History> getEnvelopeHistories() {
+    public List<EnvelopeHistory> getEnvelopeHistories() {
         return envelopeHistories;
     }
 
-    public void setEnvelopeHistories(List<Envelope_History> envelopeHistories) {
+    public void setEnvelopeHistories(List<EnvelopeHistory> envelopeHistories) {
         this.envelopeHistories = envelopeHistories;
     }
 

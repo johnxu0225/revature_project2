@@ -1,9 +1,0 @@
-package com.revature.project2.models.DTOs;
-
-public record EnvelopeDTO(
-        int userId,
-        String envelopeDescription,
-        Double amount,
-        Double maxLimit
-) {
-}
