@@ -1,7 +1,7 @@
 package com.revature.project2.models.mappers;
 
 
-import com.revature.project2.models.DTOs.TransactionDto;
+import com.revature.project2.models.DTOs.TransactionDTO;
 import com.revature.project2.models.Transaction;
 import org.springframework.stereotype.Component;
 
@@ -13,27 +13,27 @@ import java.util.stream.Collectors;
  * mapping logic for Transaction and TransactionDTO objects.
  */
 @Component
-public class TransactionDtoMapper extends AbstractMapper<Transaction, TransactionDto> {
+public class TransactionDTOMapper extends AbstractMapper<Transaction, TransactionDTO> {
 
     // Mapper for converting between Envelope and EnvelopeDTO.
-    private EnvelopeDtoMapper envelopeDtoMapper;
+    private EnvelopeDTOMapper envelopeDTOMapper;
 
     // Mapper for converting between EnvelopeHistory and EnvelopeHistoryDTO.
-    private EnvelopeHistoryDtoMapper envelopeHistoryDtoMapper;
+    private EnvelopeHistoryDTOMapper envelopeHistoryDTOMapper;
 
     /**
      * Constructor to initialize mappers for Envelope and EnvelopeHistory.
      *
-     * @param envelopeDtoMapper Mapper for Envelope to EnvelopeDTO conversion.
-     * @param envelopeHistoryDtoMapper Mapper for EnvelopeHistory to EnvelopeHistoryDTO conversion.
+     * @param envelopeDTOMapper Mapper for Envelope to EnvelopeDTO conversion.
+     * @param envelopeHistoryDTOMapper Mapper for EnvelopeHistory to EnvelopeHistoryDTO conversion.
      */
-    public TransactionDtoMapper(EnvelopeDtoMapper envelopeDtoMapper, EnvelopeHistoryDtoMapper envelopeHistoryDtoMapper) {
-        this.envelopeDtoMapper = envelopeDtoMapper;
-        this.envelopeHistoryDtoMapper = envelopeHistoryDtoMapper;
+    public TransactionDTOMapper(EnvelopeDTOMapper envelopeDTOMapper, EnvelopeHistoryDTOMapper envelopeHistoryDTOMapper) {
+        this.envelopeDTOMapper = envelopeDTOMapper;
+        this.envelopeHistoryDTOMapper = envelopeHistoryDTOMapper;
     }
 
     // Default constructor (empty).
-    public TransactionDtoMapper() {
+    public TransactionDTOMapper() {
     }
 
     /**
@@ -43,26 +43,26 @@ public class TransactionDtoMapper extends AbstractMapper<Transaction, Transactio
      * @return The corresponding Transaction entity.
      */
     @Override
-    public Transaction dtoToEntity(TransactionDto dto) {
+    public Transaction dtoToEntity(TransactionDTO dto) {
         // Creating a new Transaction object.
         Transaction transaction = new Transaction();
 
         // Mapping simple fields.
-        transaction.setTransaction_description(dto.getTransaction_description());
+        transaction.setTransactionDescription(dto.getTransactionDescription());
         transaction.setTitle(dto.getTitle());
-        transaction.setTransaction_amount(dto.getTransaction_amount());
+        transaction.setTransactionAmount(dto.getTransactionAmount());
         transaction.setCategory(dto.getCategory());
         transaction.setDatetime(dto.getDatetime());
 
         // Mapping EnvelopeDTO to Envelope entity, if present.
         if (dto.getEnvelopeDTO() != null) {
-            transaction.setEnvelope(envelopeDtoMapper.dtoToEntity(dto.getEnvelopeDTO()));
+            transaction.setEnvelope(envelopeDTOMapper.dtoToEntity(dto.getEnvelopeDTO()));
         }
 
         // Mapping list of EnvelopeHistoryDTOs to EnvelopeHistory entities, if not empty.
         if (!dto.getEnvelopeHistories().isEmpty()) {
             transaction.setEnvelopeHistories(dto.getEnvelopeHistories().stream()
-                    .map(envelopeHistoryDtoMapper::dtoToEntity) // Convert each DTO to entity.
+                    .map(envelopeHistoryDTOMapper::dtoToEntity) // Convert each DTO to entity.
                     .collect(Collectors.toList())); // Collect results into a list.
         }
 
@@ -77,31 +77,31 @@ public class TransactionDtoMapper extends AbstractMapper<Transaction, Transactio
      * @return The corresponding TransactionDTO.
      */
     @Override
-    public TransactionDto entityToDto(Transaction entity) {
+    public TransactionDTO entityToDTO(Transaction entity) {
         // Creating a new TransactionDTO object.
-        TransactionDto transactionDto = new TransactionDto();
+        TransactionDTO transactionDTO = new TransactionDTO();
 
         // Mapping simple fields.
-        transactionDto.setTransactionId(entity.getTransactionId());
-        transactionDto.setCategory(entity.getCategory());
-        transactionDto.setTransaction_description(entity.getTransaction_description());
-        transactionDto.setTransaction_amount(entity.getTransaction_amount());
-        transactionDto.setDatetime(entity.getDatetime());
-        transactionDto.setTitle(entity.getTitle());
+        transactionDTO.setTransactionId(entity.getTransactionId());
+        transactionDTO.setCategory(entity.getCategory());
+        transactionDTO.setTransactionDescription(entity.getTransactionDescription());
+        transactionDTO.setTransactionAmount(entity.getTransactionAmount());
+        transactionDTO.setDatetime(entity.getDatetime());
+        transactionDTO.setTitle(entity.getTitle());
 
         // Mapping Envelope entity to EnvelopeDTO, if present.
         if (entity.getEnvelope() != null) {
-            transactionDto.setEnvelopeDTO(envelopeDtoMapper.entityToDto(entity.getEnvelope()));
+            transactionDTO.setEnvelopeDTO(envelopeDTOMapper.entityToDTO(entity.getEnvelope()));
         }
 
         // Mapping list of EnvelopeHistory entities to EnvelopeHistoryDTOs, if not empty.
         if (!entity.getEnvelopeHistories().isEmpty()) {
-            transactionDto.setEnvelopeHistories(entity.getEnvelopeHistories().stream()
-                    .map(envelopeHistoryDtoMapper::entityToDto) // Convert each entity to DTO.
+            transactionDTO.setEnvelopeHistories(entity.getEnvelopeHistories().stream()
+                    .map(envelopeHistoryDTOMapper::entityToDTO) // Convert each entity to DTO.
                     .collect(Collectors.toList())); // Collect results into a list.
         }
 
         // Returning the mapped TransactionDTO.
-        return transactionDto;
+        return transactionDTO;
     }
 }

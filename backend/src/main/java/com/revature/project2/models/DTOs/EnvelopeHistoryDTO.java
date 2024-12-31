@@ -2,7 +2,7 @@ package com.revature.project2.models.DTOs;
 
 
 // Data Transfer Object (DTO) for representing the envelope history.
-public class EnvelopeHistoryDto {
+public class EnvelopeHistoryDTO {
 
     // Unique identifier for the amount history entry.
     private int amountHistoryId;
@@ -11,10 +11,10 @@ public class EnvelopeHistoryDto {
     private EnvelopeDTO envelopeDTO;
 
     // DTO representing the transaction associated with this history.
-    private TransactionDto transactionDto;
+    private TransactionDTO transactionDTO;
 
     // Amount of money in the envelope for this history entry.
-    private double envelope_amount;
+    private double envelopeAmount;
 
     // Getter method for amountHistoryId.
     public int getAmountHistoryId() {
@@ -36,23 +36,23 @@ public class EnvelopeHistoryDto {
         this.envelopeDTO = envelopeDTO;
     }
 
-    // Getter method for transactionDto.
-    public TransactionDto getTransactionDto() {
-        return transactionDto;
+    // Getter method for transactionDTO.
+    public TransactionDTO getTransactionDTO() {
+        return transactionDTO;
     }
 
-    // Setter method for transactionDto.
-    public void setTransactionDto(TransactionDto transactionDto) {
-        this.transactionDto = transactionDto;
+    // Setter method for transactionDTO.
+    public void setTransactionDTO(TransactionDTO transactionDTO) {
+        this.transactionDTO = transactionDTO;
     }
 
-    // Getter method for envelope_amount.
-    public double getEnvelope_amount() {
-        return envelope_amount;
+    // Getter method for envelopeAmount.
+    public double getEnvelopeAmount() {
+        return envelopeAmount;
     }
 
-    // Setter method for envelope_amount.
-    public void setEnvelope_amount(double envelope_amount) {
-        this.envelope_amount = envelope_amount;
+    // Setter method for envelopeAmount.
+    public void setEnvelopeAmount(double envelopeAmount) {
+        this.envelopeAmount = envelopeAmount;
     }
 }
