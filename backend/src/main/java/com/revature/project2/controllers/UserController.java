@@ -40,4 +40,11 @@ public class UserController {
     public ResponseEntity<List<OutgoingUserDTO>> getAllUsers() {
         return ResponseEntity.ok(userServices.getAllUsers());
     }
+
+    // TODO: Spring Security
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id) {
+        userServices.deleteUser(id);
+        return ResponseEntity.ok("User with id: " + id + " has been deleted");
+    }
 }

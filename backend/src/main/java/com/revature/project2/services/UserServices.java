@@ -68,4 +68,13 @@ public class UserServices {
         }
         return outgoingUsers;
     }
+
+    public void deleteUser(Integer id) {
+        logger.info("Deleting user with id: " + id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Error: User not found with id: " + id);
+        }
+        userRepository.delete(user.get());
+    }
 }
