@@ -5,10 +5,11 @@
   --purple: #8b4dfe;
   --white: #ffffff;
   --gray: #d9d9d9;
+  --blue: #024BB8;
 }
 
 /* Main Container */
-.login-container {
+.personalize-container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -19,24 +20,24 @@
 }
 
 /* Left Side: Text */
-.login-text {
+.personalize-text {
   width: 45%;
   padding: 20px;
   margin-top: 10px;
 }
 
-.login-text h3 {
+.personalize-text h3 {
   font-weight: bold;
   color: var(--dark-green);
 }
 
-.login-text p {
+.personalize-text p {
   line-height: 1.6;
   font-size: 1.5rem;
 }
 
 /* Right Side: Form */
-.login-form {
+.personalize-form {
   width: 45%;
   padding: 30px 30px 50px 30px;
   background-color: var(--light-green);
@@ -45,7 +46,7 @@
   text-align: center;
 }
 
-.login-form h4 {
+.personalize-form h4 {
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -61,7 +62,7 @@
   padding: 20px;
 }
 
-.button1 {
+.button3 {
   background-color: var(--purple) !important;
   color: var(--white);
   border-radius: 30px !important; /* Oval-shaped button */
@@ -72,14 +73,14 @@
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
-.signup-link {
+.login-link {
   text-decoration: none;
   color: var(--purple);
   font-weight: bold;
   margin-left: 5px;
 }
 
-.signup-link:hover {
+.login-link:hover {
   text-decoration: underline;
 }
 
@@ -88,13 +89,25 @@
   font-weight: bold;
 }
 
+.go-back-link {
+  text-decoration: none;
+  color: var(--blue);
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.go-back-link:hover {
+  text-decoration: underline;
+}
+
 /* Hide left pane in mobile view */
 @media (max-width: 768px) {
-  .login-text {
+  .personalize-text {
     display: none;
   }
 
-  .login-form {
+  .personalize-form {
     width: 100%; /* Take full width when the left pane is hidden */
     margin: 0 auto; /* Center the form */
   }

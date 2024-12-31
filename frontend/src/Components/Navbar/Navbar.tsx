@@ -10,7 +10,7 @@ export const Navbar: React.FC = () => {
   return (
     <AppBar position="static" id="appbar">
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" id="navbar-title" sx={{ flexGrow: 1 }}>
           Project Name
         </Typography>
         <div className="button-container">
