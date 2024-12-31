@@ -116,34 +116,34 @@ public class EnvelopeService {
         envelopeRepository.save(toEnvelope.get());
 
         Transaction fromTransaction = new Transaction();
-        fromTransaction.setTitle(transferFundDTO.TransactionTitle());
-        fromTransaction.setTransaction_description(transferFundDTO.TransactionDescription());
+        fromTransaction.setTitle(transferFundDTO.transactionTitle());
+        fromTransaction.setTransactionDescription(transferFundDTO.transactionDescription());
         fromTransaction.setEnvelope(fromEnvelope.get());
         fromTransaction.setDatetime(LocalDateTime.now());
         fromTransaction.setCategory("Envelope Fund Transfer");
-        fromTransaction.setTransaction_amount(transferFundDTO.amount());
+        fromTransaction.setTransactionAmount(transferFundDTO.amount());
         fromTransaction.setEnvelope(fromEnvelope.get());
         transactionService.createTransaction(fromTransaction);
 
         Transaction toTransaction = new Transaction();
-        toTransaction.setTitle(transferFundDTO.TransactionTitle());
-        toTransaction.setTransaction_description(transferFundDTO.TransactionDescription());
+        toTransaction.setTitle(transferFundDTO.transactionTitle());
+        toTransaction.setTransactionDescription(transferFundDTO.transactionDescription());
         toTransaction.setEnvelope(fromEnvelope.get());
         toTransaction.setDatetime(LocalDateTime.now());
         toTransaction.setCategory("Envelope Fund Transfer");
-        toTransaction.setTransaction_amount(transferFundDTO.amount());
+        toTransaction.setTransactionAmount(transferFundDTO.amount());
         toTransaction.setEnvelope(toEnvelope.get());
         transactionService.createTransaction(toTransaction);
 
         EnvelopeHistory fromEnvelopeHistory = new EnvelopeHistory();
         fromEnvelopeHistory.setEnvelope(fromEnvelope.get());
-        fromEnvelopeHistory.setEnvelope_amount(transferFundDTO.amount());
+        fromEnvelopeHistory.setEnvelopeAmount(transferFundDTO.amount());
         fromEnvelopeHistory.setTransaction(fromTransaction);
         envelopeHistoryService.createEnvelopeHistory(fromEnvelopeHistory);
 
         EnvelopeHistory toEnvelopeHistory = new EnvelopeHistory();
         toEnvelopeHistory.setEnvelope(toEnvelope.get());
-        toEnvelopeHistory.setEnvelope_amount(transferFundDTO.amount());
+        toEnvelopeHistory.setEnvelopeAmount(transferFundDTO.amount());
         toEnvelopeHistory.setTransaction(toTransaction);
         envelopeHistoryService.createEnvelopeHistory(toEnvelopeHistory);
 
@@ -157,14 +157,14 @@ public class EnvelopeService {
         if (envelope.isEmpty()) {
             throw new RuntimeException("Envelope not found with id: " + envelopeId);
         }
-        if (transaction.getTransaction_amount() <= 0) {
+        if (transaction.getTransactionAmount() <= 0) {
             throw new RuntimeException("Amount must be greater than 0");
         }
-        if (envelope.get().getBalance() + transaction.getTransaction_amount() > envelope.get().getMaxLimit()) {
+        if (envelope.get().getBalance() + transaction.getTransactionAmount() > envelope.get().getMaxLimit()) {
             throw new RuntimeException("Amount exceeds max limit of envelope with id: " + envelopeId);
         }
 
-        envelope.get().setBalance(envelope.get().getBalance() + transaction.getTransaction_amount());
+        envelope.get().setBalance(envelope.get().getBalance() + transaction.getTransactionAmount());
         envelopeRepository.save(envelope.get());
 
         transaction.setEnvelope(envelope.get());
@@ -182,14 +182,14 @@ public class EnvelopeService {
         if (envelope.isEmpty()) {
             throw new RuntimeException("Envelope not found with id: " + envelopeId);
         }
-        if (transaction.getTransaction_amount() <= 0) {
+        if (transaction.getTransactionAmount() <= 0) {
             throw new RuntimeException("Amount must be greater than 0");
         }
-        if (envelope.get().getBalance() < transaction.getTransaction_amount()) {
+        if (envelope.get().getBalance() < transaction.getTransactionAmount()) {
             throw new RuntimeException("Insufficient funds in envelope with id: " + envelopeId);
         }
 
-        envelope.get().setBalance(envelope.get().getBalance() - transaction.getTransaction_amount());
+        envelope.get().setBalance(envelope.get().getBalance() - transaction.getTransactionAmount());
         envelopeRepository.save(envelope.get());
 
         transaction.setEnvelope(envelope.get());

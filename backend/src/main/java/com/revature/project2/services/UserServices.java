@@ -7,15 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServices {
-    private final UserRepository userRepo;
+    private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(UserServices.class);
 
     public UserServices(UserRepository userRepo) {
-        this.userRepo = userRepo;
+        this.userRepository = userRepo;
     }
 
 
@@ -37,15 +38,20 @@ public class UserServices {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be blank!");
         }
-        return userRepo.save(user);
+        return userRepository.save(user);
     }
 
     public User login(IncomingLogin user) {
         logger.info("Logging in user: " + user);
-        Optional<User> foundUser = userRepo.findByUsernameAndPassword(user.username(), user.password());
+        Optional<User> foundUser = userRepository.findByUsernameAndPassword(user.username(), user.password());
         if (foundUser.isEmpty()) {
             throw new IllegalArgumentException("Error: Username or password is incorrect");
         }
         return foundUser.get();
+    }
+
+    public List<User> getAllUsers() {
+        logger.info("Retrieving all users");
+        return userRepository.findAll();
     }
 }
