@@ -2,7 +2,8 @@ package com.revature.project2.services;
 
 import com.revature.project2.models.Transaction;
 import com.revature.project2.repositories.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,13 +11,14 @@ import java.util.List;
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
-    @Autowired
     public TransactionService(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
     }
 
     public Transaction updateTransactionTitle(Integer id, String newTitle) {
+        logger.info("Updating transaction title for transaction with id: " + id);
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         transaction.setTitle(newTitle);
@@ -24,6 +26,7 @@ public class TransactionService {
     }
 
     public Transaction updateTransactionDescription(Integer id, String newDescription) {
+        logger.info("Updating transaction description for transaction with id: " + id);
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
         transaction.setTransaction_description(newDescription);
@@ -31,6 +34,7 @@ public class TransactionService {
     }
 
     public Transaction createTransaction(Transaction transaction) {
+        logger.info("Creating transaction: " + transaction);
         if (transaction.getTitle() == null || transaction.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Transaction title cannot be null or empty");
         }
@@ -47,6 +51,7 @@ public class TransactionService {
     }
 
     public List<Transaction> getAllTransactions() {
+        logger.info("Retrieving all transactions");
         return transactionRepository.findAll();
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @Table(name = "envelope_history")
-public class Envelope_History {
+public class EnvelopeHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int amountHistoryId;
@@ -19,10 +19,10 @@ public class Envelope_History {
     @Column(nullable = false)
     private double envelope_amount;
 
-    public Envelope_History() {
+    public EnvelopeHistory() {
     }
 
-    public Envelope_History(int amountHistoryId, Envelope envelope, Transaction transaction, double envelope_amount) {
+    public EnvelopeHistory(int amountHistoryId, Envelope envelope, Transaction transaction, double envelope_amount) {
         this.amountHistoryId = amountHistoryId;
         this.envelope = envelope;
         this.transaction = transaction;
