@@ -1,6 +1,7 @@
-package com.revature.project2.security;
+package com.revature.project2.security.utils;
 
 import com.revature.project2.models.DTOs.TokenDto;
+import com.revature.project2.security.authentication.JWTAuthObj;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

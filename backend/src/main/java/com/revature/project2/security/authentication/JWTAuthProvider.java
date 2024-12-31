@@ -1,11 +1,9 @@
-package com.revature.project2.security;
+package com.revature.project2.security.authentication;
 
-import lombok.AllArgsConstructor;
+import com.revature.project2.security.utils.TokenProcessor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +20,7 @@ public class JWTAuthProvider implements AuthenticationProvider {
         if ((authentication = tokenProcessor.getAuthObjFromToken(token)) != null) {
             return authentication;
         } else {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new BadCredentialsException("Invalid or expired token");
         }
     }
 

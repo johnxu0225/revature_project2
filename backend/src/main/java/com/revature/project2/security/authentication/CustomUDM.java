@@ -1,4 +1,4 @@
-package com.revature.project2.security;
+package com.revature.project2.security.authentication;
 
 
 import com.revature.project2.services.UserServices;
@@ -18,8 +18,9 @@ public class CustomUDM implements UserDetailsManager {
     private UserServices userServices;
     private PasswordEncoder passwordEncoder;
 
-    public CustomUDM(UserServices userServices) {
+    public CustomUDM(UserServices userServices, PasswordEncoder passwordEncoder) {
         this.userServices = userServices;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override

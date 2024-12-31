@@ -1,4 +1,4 @@
-package com.revature.project2.security;
+package com.revature.project2.security.authentication;
 
 import com.revature.project2.models.User;
 import lombok.Getter;

@@ -1,6 +1,5 @@
-package com.revature.project2.security;
+package com.revature.project2.security.authentication;
 
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
