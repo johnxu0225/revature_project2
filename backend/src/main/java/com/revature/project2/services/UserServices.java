@@ -3,6 +3,8 @@ package com.revature.project2.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.revature.project2.models.User;
@@ -45,5 +47,20 @@ public class UserServices {
             throw new IllegalArgumentException("Error: Username or password is incorrect");
         }
         return foundUser.get();
+    }
+
+    public boolean userExists(String username){
+        return userRepo.findByUsername(username).isPresent();
+    }
+
+    public User getUserByUsername(String username){
+        var dbData = userRepo.findByUsername(username);
+        return dbData.orElseThrow(()->new UsernameNotFoundException("User Not Found"));
+    }
+
+    public void deleteByUsername(String username){
+        var user = userRepo.findByUsername(username);
+        if(user.isEmpty()) throw new UsernameNotFoundException("User Not Found");
+        userRepo.delete(user.get());
     }
 }
