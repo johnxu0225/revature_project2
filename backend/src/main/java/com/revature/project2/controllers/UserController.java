@@ -1,5 +1,6 @@
 package com.revature.project2.controllers;
 
+import com.revature.project2.models.DTOs.OutgoingUserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
 
     // TODO: Spring Security
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<OutgoingUserDTO>> getAllUsers() {
         return ResponseEntity.ok(userServices.getAllUsers());
     }
 }

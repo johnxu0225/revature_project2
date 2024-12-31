@@ -1,12 +1,14 @@
 package com.revature.project2.services;
 
 import com.revature.project2.models.DTOs.IncomingLogin;
+import com.revature.project2.models.DTOs.OutgoingUserDTO;
 import com.revature.project2.models.User;
 import com.revature.project2.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +17,8 @@ public class UserServices {
     private final UserRepository userRepository;
     private final Logger logger = LoggerFactory.getLogger(UserServices.class);
 
-    public UserServices(UserRepository userRepo) {
-        this.userRepository = userRepo;
+    public UserServices(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
 
@@ -50,8 +52,20 @@ public class UserServices {
         return foundUser.get();
     }
 
-    public List<User> getAllUsers() {
+    public List<OutgoingUserDTO> getAllUsers() {
         logger.info("Retrieving all users");
-        return userRepository.findAll();
+        List<OutgoingUserDTO> outgoingUsers = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            outgoingUsers.add(new OutgoingUserDTO(
+                    user.getUserId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole()
+            ));
+        }
+        return outgoingUsers;
     }
 }
