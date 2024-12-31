@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/envelope/history")
+@RequestMapping("/envelopes/history")
 public class EnvelopHistoryController {
     private final EnvelopeHistoryService envelopeHistoryService;
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Transaction {
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
-    private String transaction_description;
+    private String transactionDescription;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "envelopeId")
     private Envelope envelope;
@@ -26,7 +26,7 @@ public class Transaction {
     @Column(nullable = false)
     private String category;
     @Column(nullable = false)
-    private double transaction_amount;
+    private double transactionAmount;
     @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<EnvelopeHistory> envelopeHistories;
@@ -34,14 +34,14 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(int transactionId, String title, String transaction_description, Envelope envelope, LocalDateTime datetime, String category, double transaction_amount) {
+    public Transaction(int transactionId, String title, String transactionDescription, Envelope envelope, LocalDateTime datetime, String category, double transactionAmount) {
         this.transactionId = transactionId;
         this.title = title;
-        this.transaction_description = transaction_description;
+        this.transactionDescription = transactionDescription;
         this.envelope = envelope;
         this.datetime = datetime;
         this.category = category;
-        this.transaction_amount = transaction_amount;
+        this.transactionAmount = transactionAmount;
     }
 
     public int getTransactionId() {
@@ -60,12 +60,12 @@ public class Transaction {
         this.title = title;
     }
 
-    public String getTransaction_description() {
-        return transaction_description;
+    public String getTransactionDescription() {
+        return transactionDescription;
     }
 
-    public void setTransaction_description(String transaction_description) {
-        this.transaction_description = transaction_description;
+    public void setTransactionDescription(String transactionDescription) {
+        this.transactionDescription = transactionDescription;
     }
 
     public Envelope getEnvelope() {
@@ -92,12 +92,12 @@ public class Transaction {
         this.category = category;
     }
 
-    public double getTransaction_amount() {
-        return transaction_amount;
+    public double getTransactionAmount() {
+        return transactionAmount;
     }
 
-    public void setTransaction_amount(double transaction_amount) {
-        this.transaction_amount = transaction_amount;
+    public void setTransactionAmount(double transactionAmount) {
+        this.transactionAmount = transactionAmount;
     }
 
     public List<EnvelopeHistory> getEnvelopeHistories() {
@@ -113,11 +113,11 @@ public class Transaction {
         return "Transaction{" +
                 "transactionId=" + transactionId +
                 ", title='" + title + '\'' +
-                ", transaction_description='" + transaction_description + '\'' +
+                ", transactionDescription='" + transactionDescription + '\'' +
                 ", envelopeId=" + envelope +
                 ", datetime=" + datetime +
                 ", category='" + category + '\'' +
-                ", transaction_amount=" + transaction_amount +
+                ", transactionAmount=" + transactionAmount +
                 '}';
     }
 }

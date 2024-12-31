@@ -29,7 +29,7 @@ public class TransactionService {
         logger.info("Updating transaction description for transaction with id: " + id);
         Transaction transaction = transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
-        transaction.setTransaction_description(newDescription);
+        transaction.setTransactionDescription(newDescription);
         return transactionRepository.save(transaction);
     }
 
@@ -38,7 +38,7 @@ public class TransactionService {
         if (transaction.getTitle() == null || transaction.getTitle().isEmpty()) {
             throw new IllegalArgumentException("Transaction title cannot be null or empty");
         }
-        if (transaction.getTransaction_description() == null || transaction.getTransaction_description().isEmpty()) {
+        if (transaction.getTransactionDescription() == null || transaction.getTransactionDescription().isEmpty()) {
             throw new IllegalArgumentException("Transaction description cannot be null or empty");
         }
         //Additional business rule checks can be added here

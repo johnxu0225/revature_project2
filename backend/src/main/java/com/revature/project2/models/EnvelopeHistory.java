@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name = "envelope_history")
+@Table(name = "envelopeHistories")
 public class EnvelopeHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,16 +17,16 @@ public class EnvelopeHistory {
     @JoinColumn(name = "transactionId")
     private Transaction transaction;
     @Column(nullable = false)
-    private double envelope_amount;
+    private double envelopeAmount;
 
     public EnvelopeHistory() {
     }
 
-    public EnvelopeHistory(int amountHistoryId, Envelope envelope, Transaction transaction, double envelope_amount) {
+    public EnvelopeHistory(int amountHistoryId, Envelope envelope, Transaction transaction, double envelopeAmount) {
         this.amountHistoryId = amountHistoryId;
         this.envelope = envelope;
         this.transaction = transaction;
-        this.envelope_amount = envelope_amount;
+        this.envelopeAmount = envelopeAmount;
     }
 
     public int getAmountHistoryId() {
@@ -53,21 +53,21 @@ public class EnvelopeHistory {
         this.transaction = transaction;
     }
 
-    public double getEnvelope_amount() {
-        return envelope_amount;
+    public double getEnvelopeAmount() {
+        return envelopeAmount;
     }
 
-    public void setEnvelope_amount(double envelope_amount) {
-        this.envelope_amount = envelope_amount;
+    public void setEnvelopeAmount(double envelopeAmount) {
+        this.envelopeAmount = envelopeAmount;
     }
 
     @Override
     public String toString() {
-        return "Envelope_History{" +
+        return "EnvelopeHistory{" +
                 "amountHistoryId=" + amountHistoryId +
                 ", envelope=" + envelope +
                 ", transactionId=" + transaction +
-                ", envelope_amount=" + envelope_amount +
+                ", envelopeAmount=" + envelopeAmount +
                 '}';
     }
 }

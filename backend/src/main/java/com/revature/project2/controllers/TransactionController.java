@@ -18,7 +18,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PatchMapping("/transaction/title/{id}")
+    @PatchMapping("/transactions/title/{id}")
     public ResponseEntity<?> updateTransactionTitle(@PathVariable Integer id, @RequestBody String newTitle) {
         try {
             return ResponseEntity.ok(transactionService.updateTransactionTitle(id, newTitle));
@@ -27,7 +27,7 @@ public class TransactionController {
         }
     }
 
-    @PatchMapping("/transaction/description/{id}")
+    @PatchMapping("/transactions/description/{id}")
     public ResponseEntity<?> updateTransactionDescription(@PathVariable Integer id, @RequestBody String newDescription) {
         try {
             return ResponseEntity.ok(transactionService.updateTransactionDescription(id, newDescription));
@@ -36,7 +36,7 @@ public class TransactionController {
         }
     }
 
-    @PostMapping("/transaction")
+    @PostMapping("/transactions")
     public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
         try {
             return ResponseEntity.ok(transactionService.createTransaction(transaction));
@@ -48,8 +48,7 @@ public class TransactionController {
     //TODO: Spring Security
     @GetMapping("/transactions")
     public ResponseEntity<List<Transaction>> getTransactions() {
-        List<Transaction> transactions = transactionService.getAllTransactions();
-        return ResponseEntity.ok(transactions);
+        return ResponseEntity.ok(transactionService.getAllTransactions());
     }
 
 }

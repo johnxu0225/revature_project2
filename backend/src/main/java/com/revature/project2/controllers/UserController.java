@@ -2,14 +2,13 @@ package com.revature.project2.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.project2.models.User;
 import com.revature.project2.models.DTOs.IncomingLogin;
 import com.revature.project2.services.UserServices;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -33,5 +32,11 @@ public class UserController {
     public ResponseEntity<User> register(@RequestBody User user) {
         User loggedInUser = userServices.register(user);
         return ResponseEntity.ok(loggedInUser);
+    }
+
+    // TODO: Spring Security
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userServices.getAllUsers());
     }
 }
