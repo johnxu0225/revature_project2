@@ -7,6 +7,7 @@ import com.revature.project2.models.mappers.TransactionDTOMapper;
 import com.revature.project2.repositories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -87,6 +88,16 @@ public class TransactionService {
 
         // Save the updated transaction and return DTO to the controller
         return transactionDTOMapper.entityToDTO(transactionRepository.save(transaction)) ;
+    }
+
+    public ResponseEntity<?> getTransactionsByEnvelopeId(Integer envelopeId) {
+        logger.info("Retrieving transaction by envelope id: " + envelopeId);
+        List<Transaction> transactions = transactionRepository.findByEnvelope_EnvelopeId(envelopeId);
+        if (transactions.isEmpty()) {
+            return ResponseEntity.badRequest().body("Transaction with Envelope id " + envelopeId + " does not exist");
+        } else {
+            return ResponseEntity.ok(transactions);
+        }
     }
 
 }
