@@ -66,5 +66,10 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.updateTransactionCategory(id, transactionDTO));
     }
 
+    @GetMapping("/transactions/envelope/{envelopeId}")
+    public ResponseEntity<?> getTransactionsByEnvelopeId(@PathVariable Integer envelopeId) {
+        return ResponseEntity.ok(transactionService.getTransactionsByEnvelopeId(envelopeId));
+    }
+
 
 }
