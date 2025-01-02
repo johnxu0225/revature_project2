@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 @Entity
-@Table(name = "envelope")
+@Table(name = "envelopes")
 public class Envelope {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class Envelope {
     private List<Transaction> transactions;
     @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Envelope_History> envelopeHistories;
+    private List<EnvelopeHistory> envelopeHistories;
 
     public Envelope() {
     }
@@ -88,11 +88,11 @@ public class Envelope {
         this.transactions = transactions;
     }
 
-    public List<Envelope_History> getEnvelopeHistories() {
+    public List<EnvelopeHistory> getEnvelopeHistories() {
         return envelopeHistories;
     }
 
-    public void setEnvelopeHistories(List<Envelope_History> envelopeHistories) {
+    public void setEnvelopeHistories(List<EnvelopeHistory> envelopeHistories) {
         this.envelopeHistories = envelopeHistories;
     }
 

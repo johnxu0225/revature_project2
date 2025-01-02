@@ -2,12 +2,13 @@ package com.revature.project2.controllers;
 
 import com.revature.project2.models.DTOs.EnvelopeDTO;
 import com.revature.project2.models.DTOs.TransferFundDTO;
+import com.revature.project2.models.Transaction;
 import com.revature.project2.services.EnvelopeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/envelope")
+@RequestMapping("/envelopes")
 public class EnvelopeController {
     private final EnvelopeService envelopeService;
 
@@ -20,23 +21,33 @@ public class EnvelopeController {
         return envelopeService.createEnvelope(envelopeDTO);
     }
 
-    @PostMapping("/transfer")
-    public ResponseEntity<?> transferEnvelope(@RequestBody TransferFundDTO transferFundDTO) {
-        return envelopeService.transferEnvelope(transferFundDTO);
-    }
-
     @GetMapping
     public ResponseEntity<?> getEnvelopes() {
         return envelopeService.getAllEnvelopes();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getEnvelopeById(@PathVariable Integer id) {
-        return envelopeService.getEnvelopeById(id);
+    @GetMapping("/{envelopeId}")
+    public ResponseEntity<?> getEnvelopeById(@PathVariable Integer envelopeId) {
+        return envelopeService.getEnvelopeById(envelopeId);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEnvelope(@PathVariable Integer id) {
-        return envelopeService.deleteEnvelope(id);
+    @DeleteMapping("/{envelopeId}")
+    public ResponseEntity<?> deleteEnvelope(@PathVariable Integer envelopeId) {
+        return envelopeService.deleteEnvelope(envelopeId);
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<?> transferEnvelope(@RequestBody TransferFundDTO transferFundDTO) {
+        return envelopeService.transferEnvelope(transferFundDTO);
+    }
+
+    @PostMapping("/allocate/{envelopeId}")
+    public ResponseEntity<?> allocateMoney(@PathVariable Integer envelopeId, @RequestBody Transaction transaction) {
+        return envelopeService.allocateMoney(envelopeId, transaction);
+    }
+
+    @PostMapping("/spend/{envelopeId}")
+    public ResponseEntity<?> spendMoney(@PathVariable Integer envelopeId, @RequestBody Transaction transaction) {
+        return envelopeService.spendMoney(envelopeId, transaction);
     }
 }
