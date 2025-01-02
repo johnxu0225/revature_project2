@@ -59,13 +59,14 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public User getUserEntity(){
+        String commaSeparatedRoles = roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         return new User(
                 username,
                 password,
                 email,
                 firstName,
                 lastName,
-                roles.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","))
+                commaSeparatedRoles.isBlank() ? null: commaSeparatedRoles
         );
     }
 }

@@ -27,8 +27,8 @@ public class User {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
-    
-    private String role = "employee";
+    // get rid of this default value, because if the role isnt provided when updating the user, it falls to this default
+    private String role;
 
     public User() {}
 

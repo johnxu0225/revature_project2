@@ -34,6 +34,7 @@ public class UserServices {
             var dbUser = getUserByUsername(user.getUsername());
             user.setUserId(dbUser.getUserId());
         }
+
         if(!isValidUser(user)) throw new IllegalArgumentException("Invalid user object");
         userRepo.save(user);
     }

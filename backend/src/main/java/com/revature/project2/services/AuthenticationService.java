@@ -38,7 +38,7 @@ public class AuthenticationService {
 
     public Map.Entry<String, List<UserRoles>> getAuthenticatedUser(){
        var authObj =  SecurityContextHolder.getContext().getAuthentication();
-       if(authObj==null || !authObj.isAuthenticated())
+       if(authObj==null || !authObj.isAuthenticated() || authObj.getPrincipal().equals("anonymousUser"))
            throw new InsufficientAuthenticationException("No authentication information available in the security context.");
        String username = authObj.getName();
        List<UserRoles> roles = authObj.getAuthorities()

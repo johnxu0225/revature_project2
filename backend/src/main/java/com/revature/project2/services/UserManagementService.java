@@ -5,6 +5,7 @@ import com.revature.project2.security.UserRoles;
 import com.revature.project2.security.authentication.CustomUDM;
 import com.revature.project2.security.authentication.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +22,14 @@ public class UserManagementService {
     private final AuthenticationService authService;
 
     public void createUser(User user)  {
-       validateRoles(user.getRole());
-       userDetailsManager.createUser(new CustomUserDetails(user));
+        if(user.getRole() == null || user.getRole().isBlank()) user.setRole("ROLE_EMPLOYEE");
+        validateRoles(user.getRole());
+        userDetailsManager.createUser(new CustomUserDetails(user));
     }
 
     public void updateUser(User user)  {
         isActionAllowed(user.getUsername());
-        validateRoles(user.getRole());
+        if(user.getRole()!=null) validateRoles(user.getRole());
         userDetailsManager.updateUser(new CustomUserDetails(user));
     }
 
@@ -35,9 +37,19 @@ public class UserManagementService {
         isActionAllowed(username);
         userDetailsManager.deleteUser(username);
     }
- // add restrictions so that only manager can assign higher role for a user. user can assign himself only lower role
+    // adds restrictions so that only manager can assign higher role for a user. employee can assign himself only lower role
     private void validateRoles(String roles){
-       List<UserRoles> currentRoles = authService.getAuthenticatedUser().getValue();
+        // it throw exception if user is not authenticated (when registering a new user)
+       List<UserRoles> currentRoles;
+       try{
+           currentRoles = authService.getAuthenticatedUser().getValue();
+       } catch(InsufficientAuthenticationException e){
+           // if user not authenticated, we check that provided roles are valid and exit
+           // The code below throws an exception if provided string can not be parsed
+           for(String role: roles.split(","))
+               UserRoles.valueOf(role.trim());
+           return;
+       }
        for(String role: roles.split(",")) {
            var newRole = UserRoles.valueOf(role.trim());
            boolean isNewRoleHigherThanAnyPresent = currentRoles.stream().allMatch(curRole->newRole.ordinal()>curRole.ordinal());
