@@ -30,29 +30,13 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class EnvelopeHistoryServiceTests {
-    //repositories
-    //private EnvelopeRepository envelopeRepository;
-    //private TransactionRepository transactionRepository;
     private EnvelopeHistoryRepository envelopeHistoryRepository;
-    //private UserRepository userRepository;
-    //services
-    //private EnvelopeService envelopeService;
     private EnvelopeHistoryService envelopeHistoryService;
     ObjectMapper objectMapper = new ObjectMapper();
 
-    /*
-    TODO:
-    get ONE service test going
-    Move service tests to another place
-    get this working with app itself
-
-     */
     @BeforeEach
     void contextLoads() {
-        //envelopeRepository = Mockito.mock(EnvelopeRepository.class);
         envelopeHistoryRepository = Mockito.mock(EnvelopeHistoryRepository.class);
-        //userRepository = Mockito.mock(UserRepository.class);
-        //envelopeService = new EnvelopeService(userRepository, t)
         envelopeHistoryService = new EnvelopeHistoryService(envelopeHistoryRepository);
 
     }
