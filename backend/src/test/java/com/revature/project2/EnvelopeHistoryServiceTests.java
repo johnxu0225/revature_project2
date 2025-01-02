@@ -70,6 +70,8 @@ class EnvelopeHistoryServiceTests {
         List<EnvelopeHistory> outputResponse = (List<EnvelopeHistory>) responseOutput.getBody();
         Assertions.assertEquals(outputResponse.size(), 1);
         Assertions.assertTrue(envelopeHistory.toString().equals(outputResponse.get(0).toString()));
+
+        //interaction does not work but error is odd
         //Mockito.verify(envelopeHistoryRepository).findAll();
         //Mockito.verifyNoInteractions(envelopeHistoryRepository);
     }
