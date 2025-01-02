@@ -24,6 +24,8 @@ public class UserServices {
 
     public User register(User user) {
         if(!isValidUser(user)) throw new IllegalArgumentException("Invalid user object");
+        if(userRepo.findByUsername(user.getUsername()).isPresent())
+            throw new IllegalArgumentException("Such user already exists");
         return userRepo.save(user);
     }
 
@@ -59,7 +61,7 @@ public class UserServices {
             (user.getFirstName() != null && !user.getFirstName().isBlank())
             && (user.getLastName() != null && !user.getLastName().isBlank())
             && (user.getUsername() != null && !user.getUsername().isBlank())
-            && (user.getPassword() != null && user.getPassword().length() >= 8)
+            && (user.getPassword() != null) // password length should be checked in UserManagementService. Here password is already encrypted
             && (user.getEmail() != null && !user.getEmail().isBlank());
     }
 }

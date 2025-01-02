@@ -9,6 +9,6 @@ public class TestController {
     @RolesAllowed("MANAGER")
     @GetMapping("users")
     String accessibleOnlyForManagers(){
-        return "This endpoint accessible only to managers";
+        return "If you see this, you're a manager";
     }
 }

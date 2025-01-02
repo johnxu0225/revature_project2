@@ -12,6 +12,7 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,18 +34,18 @@ public class AuthenticationService {
             JWTAuthObj authObj = new JWTAuthObj(userDetails.getUsername(),true,userDetails.getAuthorities());
             return tokenProcessor.generateToken(authObj);
         }
-        return null;
+       throw new UsernameNotFoundException("Incorrect credentials");
     }
 
-    public Map.Entry<String, List<UserRoles>> getAuthenticatedUser(){
+    public Optional<Map.Entry<String, List<UserRoles>>> getAuthenticatedUser(){
        var authObj =  SecurityContextHolder.getContext().getAuthentication();
        if(authObj==null || !authObj.isAuthenticated() || authObj.getPrincipal().equals("anonymousUser"))
-           throw new InsufficientAuthenticationException("No authentication information available in the security context.");
+           return Optional.empty();
        String username = authObj.getName();
        List<UserRoles> roles = authObj.getAuthorities()
                    .stream()
                    .map(authority->UserRoles.valueOf(authority.getAuthority()))
                    .toList();
-       return new AbstractMap.SimpleEntry<>(username,roles);
+       return Optional.of(new AbstractMap.SimpleEntry<>(username,roles));
     }
 }

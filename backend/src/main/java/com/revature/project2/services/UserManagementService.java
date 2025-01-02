@@ -6,50 +6,51 @@ import com.revature.project2.security.authentication.CustomUDM;
 import com.revature.project2.security.authentication.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /*
-This service will handle user management tasks (creation, update, deletion)
+This service handles user management tasks (creation, update, delete)
+It also validates UserDetails necessary for Spring Security (Roles and password)
 The delegation chain is: UserManagementService -> CustomUDM -> UserService -> UserRepository
-This layer validates UserDetails necessary for Spring Security (Roles and password)
 */
 @Service
 @RequiredArgsConstructor
 public class UserManagementService {
     private final CustomUDM userDetailsManager;
     private final AuthenticationService authService;
+    private final PasswordEncoder passwordEncoder;
 
     public void createUser(User user)  {
         if(user.getRole() == null || user.getRole().isBlank()) user.setRole("ROLE_EMPLOYEE");
         validateRoles(user.getRole());
-        userDetailsManager.createUser(new CustomUserDetails(user));
+        validatePassword(user.getPassword());
+        userDetailsManager.createUser(new CustomUserDetails(user, passwordEncoder));
     }
 
     public void updateUser(User user)  {
         isActionAllowed(user.getUsername());
         if(user.getRole()!=null) validateRoles(user.getRole());
-        userDetailsManager.updateUser(new CustomUserDetails(user));
+        validatePassword(user.getPassword());
+        userDetailsManager.updateUser(new CustomUserDetails(user, passwordEncoder));
     }
 
     public void deleteUser(String username) {
         isActionAllowed(username);
         userDetailsManager.deleteUser(username);
     }
-    // adds restrictions so that only manager can assign higher role for a user. employee can assign himself only lower role
+    // adds restrictions so that only manager can assign higher role for a employee. employee can assign himself only lower role
     private void validateRoles(String roles){
-        // it throw exception if user is not authenticated (when registering a new user)
-       List<UserRoles> currentRoles;
-       try{
-           currentRoles = authService.getAuthenticatedUser().getValue();
-       } catch(InsufficientAuthenticationException e){
-           // if user not authenticated, we check that provided roles are valid and exit
-           // The code below throws an exception if provided string can not be parsed
-           for(String role: roles.split(","))
-               UserRoles.valueOf(role.trim());
-           return;
-       }
+        // if no user in the context, just check for provided roles
+        var currentUser = authService.getAuthenticatedUser();
+        if(currentUser.isEmpty()){
+            for(String role: roles.split(","))
+                UserRoles.valueOf(role.trim());
+            return;
+        }
+       List<UserRoles> currentRoles = currentUser.get().getValue();
        for(String role: roles.split(",")) {
            var newRole = UserRoles.valueOf(role.trim());
            boolean isNewRoleHigherThanAnyPresent = currentRoles.stream().allMatch(curRole->newRole.ordinal()>curRole.ordinal());
@@ -58,14 +59,22 @@ public class UserManagementService {
        }
     }
 
-    // this method allows managers to update/delete any users, for employee action can be done only on themselves
+    // this method allows managers to update/delete any user, for employee action can be done only on themselves
     private void isActionAllowed(String username){
-        List<UserRoles> currentRoles = authService.getAuthenticatedUser().getValue();
-        var isManager = currentRoles.stream().filter(role->role == UserRoles.ROLE_MANAGER).findAny();
+        var currentUser = authService.getAuthenticatedUser();
+        if(currentUser.isEmpty())
+            throw new InsufficientAuthenticationException("You're not authenticated");
+        List<UserRoles> currentRoles = currentUser.get().getValue();
+        var isManager = currentRoles.stream().filter(role->role.ordinal() > UserRoles.ROLE_EMPLOYEE.ordinal()).findAny();
         if(isManager.isPresent()) return;
-
-        String currentUser = authService.getAuthenticatedUser().getKey();
-        if(!currentUser.equals(username))
+        String currentUsername = currentUser.get().getKey();
+        if(!currentUsername.equals(username))
             throw new UnsupportedOperationException("This operation can be performed only on the current user");
+
+    }
+
+    private void validatePassword(String password){
+        if(password == null || password.length()<8)
+            throw new IllegalArgumentException("Password must be at least 8 characters");
     }
 }

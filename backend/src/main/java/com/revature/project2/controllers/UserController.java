@@ -3,14 +3,13 @@ package com.revature.project2.controllers;
 import com.revature.project2.models.DTOs.TokenDto;
 import com.revature.project2.services.AuthenticationService;
 import com.revature.project2.services.UserManagementService;
-import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.project2.models.User;
 import com.revature.project2.models.DTOs.IncomingLogin;
-import com.revature.project2.services.UserServices;
+
 
 @RestController
 @RequestMapping("/users")
