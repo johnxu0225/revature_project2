@@ -1,25 +1,29 @@
 package com.revature.project2.services;
 
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.revature.project2.models.DTOs.IncomingLogin;
+import com.revature.project2.models.DTOs.OutgoingUserDTO;
+import com.revature.project2.models.User;
+import com.revature.project2.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.revature.project2.models.User;
-import com.revature.project2.models.DTOs.IncomingLogin;
-import com.revature.project2.repositories.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServices {
-    private UserRepository userRepo;
+    private final UserRepository userRepository;
+    private final Logger logger = LoggerFactory.getLogger(UserServices.class);
 
-    @Autowired
-    public UserServices(UserRepository userRepo) {
-        this.userRepo = userRepo;
+    public UserServices(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
 
     public User register(User user) {
+        logger.info("Registering user: " + user);
         if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
             throw new IllegalArgumentException("First name cannot be blank!");
         }
@@ -36,14 +40,41 @@ public class UserServices {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be blank!");
         }
-        return userRepo.save(user);
+        return userRepository.save(user);
     }
 
     public User login(IncomingLogin user) {
-        Optional<User> foundUser = userRepo.findByUsernameAndPassword(user.username(), user.password());
+        logger.info("Logging in user: " + user);
+        Optional<User> foundUser = userRepository.findByUsernameAndPassword(user.username(), user.password());
         if (foundUser.isEmpty()) {
             throw new IllegalArgumentException("Error: Username or password is incorrect");
         }
         return foundUser.get();
+    }
+
+    public List<OutgoingUserDTO> getAllUsers() {
+        logger.info("Retrieving all users");
+        List<OutgoingUserDTO> outgoingUsers = new ArrayList<>();
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            outgoingUsers.add(new OutgoingUserDTO(
+                    user.getUserId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getRole()
+            ));
+        }
+        return outgoingUsers;
+    }
+
+    public void deleteUser(Integer id) {
+        logger.info("Deleting user with id: " + id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Error: User not found with id: " + id);
+        }
+        userRepository.delete(user.get());
     }
 }
