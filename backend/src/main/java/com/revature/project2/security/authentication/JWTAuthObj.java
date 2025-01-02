@@ -7,6 +7,7 @@ import java.util.Collection;
 
 
 public class JWTAuthObj implements Authentication {
+
     private String principal;
     private boolean authenticated = false;
     private String token;
@@ -14,9 +15,11 @@ public class JWTAuthObj implements Authentication {
 
     public JWTAuthObj() {
     }
+
     public JWTAuthObj(String token) {
         this.token = token;
     }
+
     public JWTAuthObj(String principal, boolean isAuthenticated, Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
         this.principal = principal;

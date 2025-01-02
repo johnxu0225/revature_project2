@@ -35,6 +35,14 @@ public class CustomUserDetails implements UserDetails {
         this.roles = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
     }
 
+    public CustomUserDetails(User user){
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.roles = AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRole());
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;

@@ -1,18 +1,17 @@
 package com.revature.project2.security.authentication;
 
 import com.revature.project2.security.utils.TokenProcessor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class JWTAuthProvider implements AuthenticationProvider {
-    private TokenProcessor tokenProcessor;
 
-    public JWTAuthProvider(TokenProcessor tokenProcessor) {
-        this.tokenProcessor = tokenProcessor;
-    }
+    private final TokenProcessor tokenProcessor;
 
     @Override
     public Authentication authenticate(Authentication authentication) {

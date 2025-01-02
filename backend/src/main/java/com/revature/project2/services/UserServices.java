@@ -2,7 +2,9 @@ package com.revature.project2.services;
 
 import java.util.Optional;
 
+import com.revature.project2.security.utils.ObjectUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -20,33 +22,20 @@ public class UserServices {
         this.userRepo = userRepo;
     }
 
-
     public User register(User user) {
-        if (user.getFirstName() == null || user.getFirstName().isEmpty()) {
-            throw new IllegalArgumentException("First name cannot be blank!");
-        }
-        if (user.getLastName() == null || user.getLastName().isEmpty()) {
-            throw new IllegalArgumentException("Last name cannot be blank!");
-        }
-        // possible TODO: check unique?
-        if (user.getUsername() == null || user.getUsername().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be blank!");
-        }
-        if (user.getPassword() == null || user.getPassword().length() < 8) {
-            throw new IllegalArgumentException("Password must have more than 8 characters!");
-        }
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new IllegalArgumentException("Email cannot be blank!");
-        }
+        if(!isValidUser(user)) throw new IllegalArgumentException("Invalid user object");
         return userRepo.save(user);
     }
 
-    public User login(IncomingLogin user) {
-        Optional<User> foundUser = userRepo.findByUsernameAndPassword(user.username(), user.password());
-        if (foundUser.isEmpty()) {
-            throw new IllegalArgumentException("Error: Username or password is incorrect");
+    public void update(User user) {
+        var dbData = getUserByUsername(user.getUsername());
+        ObjectUpdater.copyNonNullValues(dbData,user);
+        if(user.getUserId() == 0){
+            var dbUser = getUserByUsername(user.getUsername());
+            user.setUserId(dbUser.getUserId());
         }
-        return foundUser.get();
+        if(!isValidUser(user)) throw new IllegalArgumentException("Invalid user object");
+        userRepo.save(user);
     }
 
     public boolean userExists(String username){
@@ -62,5 +51,14 @@ public class UserServices {
         var user = userRepo.findByUsername(username);
         if(user.isEmpty()) throw new UsernameNotFoundException("User Not Found");
         userRepo.delete(user.get());
+    }
+
+    private boolean isValidUser(User user){
+        return
+            (user.getFirstName() != null && !user.getFirstName().isBlank())
+            && (user.getLastName() != null && !user.getLastName().isBlank())
+            && (user.getUsername() != null && !user.getUsername().isBlank())
+            && (user.getPassword() != null && user.getPassword().length() >= 8)
+            && (user.getEmail() != null && !user.getEmail().isBlank());
     }
 }

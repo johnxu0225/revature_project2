@@ -11,8 +11,6 @@ import java.io.IOException;
 
 @Component
 public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
-
-
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden

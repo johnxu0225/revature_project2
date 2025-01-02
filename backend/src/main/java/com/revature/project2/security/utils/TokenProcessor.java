@@ -5,6 +5,8 @@ import com.revature.project2.security.authentication.JWTAuthObj;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -18,11 +20,17 @@ import java.util.stream.Collectors;
 
 @Component
 public class TokenProcessor {
-    private static final String PRIVATE_KEY = "your-hardcoded-private-key-must-be-more-than-256-bits";
-    SecretKey privateKey = Keys.hmacShaKeyFor(PRIVATE_KEY.getBytes(StandardCharsets.UTF_8));
-    // this private key is generated at runtime
-   // private static SecretKey privateKey = Jwts.SIG.HS256.key().build();
-    private final int TOKEN_EXP_SEC = 86400;
+    @Value("${jwt.private-key:#{null}}")
+    private String PRIVATE_KEY;
+    SecretKey privateKey = Jwts.SIG.HS256.key().build();
+    @Value("${jwt.ttl:86400}")
+    private int TOKEN_EXP_SEC = 86400;
+
+    @PostConstruct
+    void init(){
+        if(PRIVATE_KEY!=null && PRIVATE_KEY.length()>=32)
+            privateKey = Keys.hmacShaKeyFor(PRIVATE_KEY.getBytes(StandardCharsets.UTF_8));
+    }
 
     public TokenDto generateToken(Authentication authObj) {
         Date currentDate = new Date();

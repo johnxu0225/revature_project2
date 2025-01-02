@@ -2,6 +2,7 @@ package com.revature.project2.security.authentication;
 
 
 import com.revature.project2.services.UserServices;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -13,15 +14,11 @@ import org.springframework.stereotype.Component;
 
 // manages user details for Spring Security
 @Component
+@RequiredArgsConstructor
 public class CustomUDM implements UserDetailsManager {
 
-    private UserServices userServices;
-    private PasswordEncoder passwordEncoder;
-
-    public CustomUDM(UserServices userServices, PasswordEncoder passwordEncoder) {
-        this.userServices = userServices;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final UserServices userServices;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public boolean userExists(String username) {
@@ -39,7 +36,6 @@ public class CustomUDM implements UserDetailsManager {
                 .build();
     }
 
-    // methods below should be implemented to follow up with Spring User Details Manager contract
     @Override
     public void createUser(UserDetails user) {
         if (!(user instanceof CustomUserDetails userDetails))
@@ -51,7 +47,7 @@ public class CustomUDM implements UserDetailsManager {
     public void updateUser(UserDetails user) {
         if (!(user instanceof CustomUserDetails userDetails))
             throw new IllegalArgumentException("You should provide instance of CustomUserDetails");
-        userServices.register(userDetails.getUserEntity());
+        userServices.update(userDetails.getUserEntity());
     }
 
     @Override
@@ -65,13 +61,13 @@ public class CustomUDM implements UserDetailsManager {
         if(authObj==null) throw new UsernameNotFoundException("Security context is empty");
 
         String currentUser = authObj.getName();
-        var dbData = userServices.getUserByUsername(currentUser);
-        if(passwordEncoder.matches(oldPassword,dbData.getPassword()))
-            dbData.setPassword(passwordEncoder.encode(newPassword));
+        var dbUserData = userServices.getUserByUsername(currentUser);
+        if(passwordEncoder.matches(oldPassword,dbUserData.getPassword()))
+            dbUserData.setPassword(passwordEncoder.encode(newPassword));
         else
             throw new BadCredentialsException("Incorrect Old Password");
 
-        userServices.register(dbData);
+        userServices.update(dbUserData);
     }
 
 }

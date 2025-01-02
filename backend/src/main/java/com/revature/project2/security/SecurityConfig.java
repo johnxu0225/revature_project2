@@ -27,6 +27,7 @@ public class SecurityConfig {
     private final JWTAuthProvider jwtAuthProvider;
     private final AccessDeniedHandler accessDeniedHandler;
 
+    // using @Lazy injection to avoid circular dependency
     public SecurityConfig(@Lazy JWTAuthFilter jwtAuthFilter, AuthenticationEntryPoint authenticationEntryPoint, JWTAuthProvider jwtAuthProvider, AccessDeniedHandlerImpl accessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
@@ -44,7 +45,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(config -> {
                     // Allow unauthenticated access to the /users endpoint
-                    config.requestMatchers(HttpMethod.POST, "/users").permitAll();
+                    config.requestMatchers(HttpMethod.POST, "/users","/users/register").permitAll();
 
                     // All other requests must be authenticated
                     config.anyRequest().authenticated();
