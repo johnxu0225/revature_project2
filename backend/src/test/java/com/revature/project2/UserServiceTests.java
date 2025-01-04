@@ -66,12 +66,17 @@ public class UserServiceTests {
     @Test
     void test_update(){
         User user = new User("User","password","User@users.com","User","User", "Employee");
-        User userUpdate = new User("User","password2","User2@users.com","User2","User2", "Employee");
+        User userUpdate = new User("User","password2","User2@users.com","User2","User3", "Employee");
 
-
+        ArgumentCaptor<User> userCapture = ArgumentCaptor.forClass(User.class);
         when(userRepository.findByUsername("User")).thenReturn(Optional.of(user));
-        when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        when(userRepository.save(userCapture.capture())).thenReturn(userUpdate);
         userServices.update(userUpdate);
+        User userUpdated = userCapture.getValue();
+        Assertions.assertTrue("password2".equals(userUpdated.getPassword()));
+        Assertions.assertTrue("User2@users.com".equals(userUpdated.getEmail()));
+        Assertions.assertTrue("User2".equals(userUpdated.getFirstName()));
+        Assertions.assertTrue("User3".equals(userUpdated.getLastName()));
         Mockito.verify(userRepository).save(Mockito.any(User.class));
     }
 
