@@ -2,7 +2,10 @@ package com.revature.project2;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.revature.project2.models.DTOs.EnvelopeDTO;
+import com.revature.project2.models.DTOs.TransferFundDTO;
 import com.revature.project2.models.Envelope;
+import com.revature.project2.models.EnvelopeHistory;
+import com.revature.project2.models.Transaction;
 import com.revature.project2.models.User;
 import com.revature.project2.repositories.EnvelopeRepository;
 import com.revature.project2.repositories.UserRepository;
@@ -15,11 +18,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,14 +171,344 @@ public class EnvelopeServiceTests {
 
      */
     @Test
+    public void test_transferEnvelope_valid(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelopeFrom = new Envelope(100, user, "100", 100.0, 200.0);
+        Envelope envelopeTo = new Envelope(200, user, "100", 100.0, 200.0);
+        TransferFundDTO transferFundDTO = new TransferFundDTO(100,200, "TransactionTitle", "TransactionDesc", 100.0);
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelopeFrom));
+        when(envelopeRepository.findById(200)).thenReturn(Optional.of(envelopeTo));
+
+        ArgumentCaptor<Envelope> envelopeArgumentCaptor = ArgumentCaptor.forClass(Envelope.class);
+        ArgumentCaptor<EnvelopeHistory> envelopeHistoryArgumentCaptor = ArgumentCaptor.forClass(EnvelopeHistory.class);
+        ArgumentCaptor<Transaction> transactionArgumentCaptor = ArgumentCaptor.forClass(Transaction.class);
+
+        envelopeService.transferEnvelope(transferFundDTO);
+
+
+        Mockito.verify(envelopeRepository, Mockito.times(2)).save(envelopeArgumentCaptor.capture());
+        List<Envelope> envelopeList = envelopeArgumentCaptor.getAllValues();
+
+        if ((envelopeList.get(0).getEnvelopeId()==200)&&(envelopeList.get(1).getEnvelopeId()==100)){
+            Collections.swap(envelopeList,0,1);
+        }
+        if (!(envelopeList.get(0).getEnvelopeId()==100)||!(envelopeList.get(1).getEnvelopeId()==200)){
+            //transactions failed to be created
+            Assertions.assertFalse(true);
+        }
+        Envelope envFrom = envelopeList.get(0);
+        Envelope envTo = envelopeList.get(1);
+        Assertions.assertEquals(0.0, envFrom.getBalance());
+        Assertions.assertEquals(200.0, envTo.getBalance());
+
+
+        Mockito.verify(transactionService, Mockito.times(2)).createTransaction(transactionArgumentCaptor.capture());
+        List<Transaction> transactionList = transactionArgumentCaptor.getAllValues();
+
+        if ((transactionList.get(0).getEnvelope().getEnvelopeId()==200)&&(transactionList.get(1).getEnvelope().getEnvelopeId()==100)){
+            Collections.swap(transactionList,0,1);
+        }
+        if (!(transactionList.get(0).getEnvelope().getEnvelopeId()==100)||!(transactionList.get(1).getEnvelope().getEnvelopeId()==200)){
+            //transactions failed to be created
+            Assertions.assertFalse(true);
+        }
+        Transaction transTo = transactionList.get(0);
+        Transaction transFrom = transactionList.get(1);
+        Assertions.assertEquals(100.0, transTo.getTransactionAmount());
+        Assertions.assertTrue("TransactionTitle".equals(transTo.getTitle()));
+        Assertions.assertTrue("TransactionDesc".equals(transTo.getTransactionDescription()));
+        Assertions.assertEquals(100.0, transFrom.getTransactionAmount());
+        Assertions.assertTrue("TransactionTitle".equals(transFrom.getTitle()));
+        Assertions.assertTrue("TransactionDesc".equals(transFrom.getTransactionDescription()));
+
+
+        Mockito.verify(envelopeHistoryService, Mockito.times(2)).createEnvelopeHistory(envelopeHistoryArgumentCaptor.capture());
+        List<EnvelopeHistory> envelopeHistoryList = envelopeHistoryArgumentCaptor.getAllValues();
+
+        if ((envelopeHistoryList.get(0).getEnvelope().getEnvelopeId()==200)&&(envelopeHistoryList.get(1).getEnvelope().getEnvelopeId()==100)){
+            Collections.swap(envelopeList,0,1);
+        }
+        if (!(envelopeHistoryList.get(0).getEnvelope().getEnvelopeId()==100)||!(envelopeHistoryList.get(1).getEnvelope().getEnvelopeId()==200)){
+            //transactions failed to be created
+            Assertions.assertFalse(true);
+        }
+    }
+
+    @Test
+    public void test_transferEnvelope_invalid_noFrom(){
+
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelopeFrom = new Envelope(100, user, "100", 100.0, 200.0);
+        Envelope envelopeTo = new Envelope(200, user, "100", 100.0, 200.0);
+        TransferFundDTO transferFundDTO = new TransferFundDTO(0,200, "TransactionTitle", "TransactionDesc", 100.0);
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelopeFrom));
+        when(envelopeRepository.findById(200)).thenReturn(Optional.of(envelopeTo));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.transferEnvelope(transferFundDTO));
+        Mockito.verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+        Mockito.verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        Mockito.verify(envelopeHistoryService, never()).createEnvelopeHistory(Mockito.any(EnvelopeHistory.class));
+    }
+
+
+    @Test
+    public void test_transferEnvelope_invalid_noTo(){
+
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelopeFrom = new Envelope(100, user, "100", 100.0, 200.0);
+        Envelope envelopeTo = new Envelope(200, user, "100", 100.0, 200.0);
+        TransferFundDTO transferFundDTO = new TransferFundDTO(100,0, "TransactionTitle", "TransactionDesc", 100.0);
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelopeFrom));
+        when(envelopeRepository.findById(200)).thenReturn(Optional.of(envelopeTo));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.transferEnvelope(transferFundDTO));
+        Mockito.verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+        Mockito.verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        Mockito.verify(envelopeHistoryService, never()).createEnvelopeHistory(Mockito.any(EnvelopeHistory.class));
+    }
+
+
+    @Test
+    public void test_transferEnvelope_invalid_notEnoughBalance(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelopeFrom = new Envelope(100, user, "100", 100.0, 200.0);
+        Envelope envelopeTo = new Envelope(200, user, "100", 100.0, 300.0);
+        TransferFundDTO transferFundDTO = new TransferFundDTO(0,200, "TransactionTitle", "TransactionDesc", 200.0);
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelopeFrom));
+        when(envelopeRepository.findById(200)).thenReturn(Optional.of(envelopeTo));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.transferEnvelope(transferFundDTO));
+        Mockito.verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+        Mockito.verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        Mockito.verify(envelopeHistoryService, never()).createEnvelopeHistory(Mockito.any(EnvelopeHistory.class));
+    }
+
+
+    @Test
+    public void test_transferEnvelope_invalid_maxLimLow(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelopeFrom = new Envelope(100, user, "100", 100.0, 200.0);
+        Envelope envelopeTo = new Envelope(200, user, "100", 100.0, 100.0);
+        TransferFundDTO transferFundDTO = new TransferFundDTO(100,200, "TransactionTitle", "TransactionDesc", 100.0);
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelopeFrom));
+        when(envelopeRepository.findById(200)).thenReturn(Optional.of(envelopeTo));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.transferEnvelope(transferFundDTO));
+        Mockito.verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+        Mockito.verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        Mockito.verify(envelopeHistoryService, never()).createEnvelopeHistory(Mockito.any(EnvelopeHistory.class));
+    }
+
+    @Test
     public void test_allocateMoney_valid(){
         User user = new User();
         user.setUserId(100);
-        Envelope envelope = new Envelope(100, user, "100", 100.0, 100.0);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
 
+        Envelope outEnvelope = new Envelope();
+        outEnvelope.setUser(user);
+        outEnvelope.setEnvelopeDescription("saveEnvelope");
 
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(100.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        Transaction saveTransaction = new Transaction();
+        saveTransaction.setTitle("saveTransaction");
+
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        ArgumentCaptor<Envelope> envelopeArgumentCaptor = ArgumentCaptor.forClass(Envelope.class);
+        ArgumentCaptor<Transaction> transactionArgumentCaptor = ArgumentCaptor.forClass(Transaction.class);
+
+        when(envelopeRepository.save(envelopeArgumentCaptor.capture())).thenReturn(outEnvelope);
+        when(transactionService.createTransaction(transactionArgumentCaptor.capture())).thenReturn(saveTransaction);
+
+        ResponseEntity r = envelopeService.allocateMoney(100, transaction);
+
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
+        Envelope saveEnvelope = envelopeArgumentCaptor.getValue();
+        Transaction createTransaction = transactionArgumentCaptor.getValue();
+        Transaction returnTransaction = (Transaction) r.getBody();
+        Assertions.assertEquals(100, saveEnvelope.getEnvelopeId());
+        Assertions.assertEquals(200.0, saveEnvelope.getBalance());
+        Assertions.assertEquals(100.0, createTransaction.getTransactionAmount());
+        Assertions.assertTrue("saveTransaction".equals(returnTransaction.getTitle()));
     }
 
+    @Test
+    public void test_allocateMoney_invalid_noUser(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(100.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.allocateMoney(0, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    public void test_allocateMoney_invalid_maxLimTooLow(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(10000000000.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.allocateMoney(100, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    public void test_allocateMoney_invalid_noTransfer(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(0.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.allocateMoney(100, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    public void test_spendMoney_valid(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Envelope outEnvelope = new Envelope();
+        outEnvelope.setUser(user);
+        outEnvelope.setEnvelopeDescription("saveEnvelope");
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(100.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        Transaction saveTransaction = new Transaction();
+        saveTransaction.setTitle("saveTransaction");
+
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        ArgumentCaptor<Envelope> envelopeArgumentCaptor = ArgumentCaptor.forClass(Envelope.class);
+        ArgumentCaptor<Transaction> transactionArgumentCaptor = ArgumentCaptor.forClass(Transaction.class);
+
+        when(envelopeRepository.save(envelopeArgumentCaptor.capture())).thenReturn(outEnvelope);
+        when(transactionService.createTransaction(transactionArgumentCaptor.capture())).thenReturn(saveTransaction);
+
+        ResponseEntity r = envelopeService.spendMoney(100, transaction);
+
+        Assertions.assertEquals(HttpStatus.OK, r.getStatusCode());
+        Envelope saveEnvelope = envelopeArgumentCaptor.getValue();
+        Transaction createTransaction = transactionArgumentCaptor.getValue();
+        Transaction returnTransaction = (Transaction) r.getBody();
+        Assertions.assertEquals(100, saveEnvelope.getEnvelopeId());
+        Assertions.assertEquals(0.0, saveEnvelope.getBalance());
+        Assertions.assertEquals(100.0, createTransaction.getTransactionAmount());
+        Assertions.assertTrue("saveTransaction".equals(returnTransaction.getTitle()));
+    }
+
+    @Test
+    public void test_spendMoney_invalid_noUser(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(100.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.spendMoney(0, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    public void test_spendMoney_invalid_BalanceTooLow(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(10000000000.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.allocateMoney(100, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
+
+    @Test
+    public void test_spendMoney_invalid_noTransfer(){
+        User user = new User();
+        user.setUserId(100);
+        Envelope envelope = new Envelope(100, user, "100", 100.0, 200.0);
+
+        Transaction transaction = new Transaction();
+        transaction.setTransactionAmount(0.0);
+        transaction.setCategory("Bills");
+        transaction.setTitle("allocateTransaction");
+
+        when(envelopeRepository.findById(0)).thenReturn(Optional.empty());
+        when(envelopeRepository.findById(100)).thenReturn(Optional.of(envelope));
+
+        RuntimeException ex = Assertions.assertThrows(RuntimeException.class, ()->envelopeService.allocateMoney(100, transaction));
+
+        verify(envelopeRepository, never()).save(Mockito.any(Envelope.class));
+        verify(transactionService, never()).createTransaction(Mockito.any(Transaction.class));
+    }
 
 
 }
