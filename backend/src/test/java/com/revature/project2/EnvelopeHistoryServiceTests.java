@@ -37,7 +37,6 @@ class EnvelopeHistoryServiceTests {
     void contextLoads() {
         envelopeHistoryRepository = Mockito.mock(EnvelopeHistoryRepository.class);
         envelopeHistoryService = new EnvelopeHistoryService(envelopeHistoryRepository);
-
     }
 
     @Test
@@ -47,13 +46,12 @@ class EnvelopeHistoryServiceTests {
         mockedList.add(new EnvelopeHistory());
         when(envelopeHistoryRepository.findAll()).thenReturn(mockedList);
         ResponseEntity<?> responseOutput = envelopeHistoryService.getAllEnvelopeHistory();
-        assertEquals(responseOutput.getStatusCode(), HttpStatus.OK);
-        Assertions.assertEquals(responseOutput.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, responseOutput.getStatusCode());
+        Assertions.assertEquals(HttpStatus.OK, responseOutput.getStatusCode());
 
         List<EnvelopeHistory> outputResponse = (List<EnvelopeHistory>) responseOutput.getBody();
-        Assertions.assertEquals(outputResponse.size(), 1);
+        Assertions.assertEquals(1, outputResponse.size());
         Assertions.assertTrue(envelopeHistory.toString().equals(outputResponse.get(0).toString()));
-
 
         Mockito.verify(envelopeHistoryRepository).findAll();
         Mockito.verifyNoMoreInteractions(envelopeHistoryRepository);
@@ -66,10 +64,10 @@ class EnvelopeHistoryServiceTests {
         mockedList.add(new EnvelopeHistory());
         when(envelopeHistoryRepository.findByEnvelope_EnvelopeId(0)).thenReturn(mockedList);
         ResponseEntity<?> responseOutput = envelopeHistoryService.getEnvelopeHistoryByEnvelopeId(0);
-        Assertions.assertEquals(responseOutput.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, responseOutput.getStatusCode());
 
         List<EnvelopeHistory> outputResponse = (List<EnvelopeHistory>) responseOutput.getBody();
-        Assertions.assertEquals(outputResponse.size(), 1);
+        Assertions.assertEquals(1, outputResponse.size());
         Assertions.assertTrue(envelopeHistory.toString().equals(outputResponse.get(0).toString()));
     }
 
@@ -79,7 +77,7 @@ class EnvelopeHistoryServiceTests {
 
         when(envelopeHistoryRepository.findByEnvelope_EnvelopeId(0)).thenReturn(mockedList);
         ResponseEntity<?> responseOutput = envelopeHistoryService.getEnvelopeHistoryByEnvelopeId(0);
-        Assertions.assertEquals(responseOutput.getStatusCode(), HttpStatus.BAD_REQUEST);
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseOutput.getStatusCode());
 
         String outputResponse = (String) responseOutput.getBody();
 
@@ -92,10 +90,8 @@ class EnvelopeHistoryServiceTests {
         EnvelopeHistory envelopeHistory = new EnvelopeHistory();
         when(envelopeHistoryRepository.save(envelopeHistory)).thenReturn(envelopeHistory);
         ResponseEntity<?> responseOutput = envelopeHistoryService.createEnvelopeHistory(envelopeHistory);
-        Assertions.assertEquals(responseOutput.getStatusCode(), HttpStatus.OK);
+        Assertions.assertEquals(HttpStatus.OK, responseOutput.getStatusCode());
         EnvelopeHistory outputEnvelopeHistory = (EnvelopeHistory) responseOutput.getBody();
         Assertions.assertTrue(outputEnvelopeHistory.toString().equals(envelopeHistory.toString()));
-
     }
-
 }
