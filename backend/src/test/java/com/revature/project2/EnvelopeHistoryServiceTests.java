@@ -28,7 +28,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-@SpringBootTest
 class EnvelopeHistoryServiceTests {
     private EnvelopeHistoryRepository envelopeHistoryRepository;
     private EnvelopeHistoryService envelopeHistoryService;
@@ -55,9 +54,9 @@ class EnvelopeHistoryServiceTests {
         Assertions.assertEquals(outputResponse.size(), 1);
         Assertions.assertTrue(envelopeHistory.toString().equals(outputResponse.get(0).toString()));
 
-        //interaction does not work but error is odd
-        //Mockito.verify(envelopeHistoryRepository).findAll();
-        //Mockito.verifyNoInteractions(envelopeHistoryRepository);
+
+        Mockito.verify(envelopeHistoryRepository).findAll();
+        Mockito.verifyNoMoreInteractions(envelopeHistoryRepository);
     }
 
     @Test
