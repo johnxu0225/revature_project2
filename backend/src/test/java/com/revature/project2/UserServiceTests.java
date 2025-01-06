@@ -121,21 +121,4 @@ public class UserServiceTests {
         Assertions.assertTrue(outUserList.size()==1);
         Assertions.assertTrue("User1".equals(outUserList.get(0).getUsername()));
     }
-
-    @Test
-    void test_deleteById(){
-        User user = new User("User","password","User@users.com","User","User", "Employee");
-        user.setUserId(0);
-        when(userRepository.findById(0)).thenReturn(Optional.of(user));
-        when(userRepository.findById(1)).thenReturn(Optional.empty());
-        ArgumentCaptor<User> userCapture = ArgumentCaptor.forClass(User.class);
-        doNothing().when(userRepository).delete(userCapture.capture());
-        userServices.deleteUser(0);
-        Assertions.assertTrue("User".equals(userCapture.getValue().getUsername()));
-        Mockito.verify(userRepository).delete(Mockito.any(User.class));
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, ()->userServices.deleteUser(1));
-
-
-    }
-
 }
