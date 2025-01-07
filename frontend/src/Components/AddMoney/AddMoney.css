@@ -3,15 +3,17 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    height: 100vh;
     padding: 20px;
     box-sizing: border-box;
     margin-top: 30px;
+    /* Probably not the best way */
+    height: calc(100vh - 30px - 64px);
+    overflow: hidden;
 }
 
 /* Left Side */
 .add-money-container {
-    width: 45%;
+    width: 40%;
     padding: 20px;
     margin-top: 10px;
 }
@@ -23,10 +25,18 @@
 
 /* Right Side */
 .add-envelope-container {
-    width: 45%;
+    width: 55%;
     padding: 30px 30px 50px 30px;
-    background-color: var(--light-green);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     border-radius: 8px;
-    text-align: center;
+}
+
+.envelope-list {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 10px;
+    justify-content: center;
+    height: calc(100vh - 20%);
+    overflow: auto;
+    align-content: flex-start;
 }
