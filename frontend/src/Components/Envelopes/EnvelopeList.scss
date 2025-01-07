@@ -3,7 +3,6 @@
 .envelope {
 	&-container {
 		@include util.flex($dir: column, $align: center, $x-align: flex-start, $gap: 10px);
-		overflow-x: auto;
 		width: 100vw;
 		margin-top: 30px;
 	}
@@ -15,6 +14,25 @@
 		width: 100vw;
 	}
 
+	&-header {
+		border-radius: 2px;
+		min-width: 275px;
+		height: 15px;
+
+		&-good {
+			@extend .envelope-header;
+			background-color: #00e676;
+		}
+		&-warning {
+			@extend .envelope-header;
+			background-color: #ffc400;
+		}
+		&-danger {
+			@extend .envelope-header;
+			background-color: #ff1744;
+		}
+	}
+
 	&-card {
 		flex: 0 0 auto;
 
@@ -24,6 +42,16 @@
 		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 		border-radius: 8px;
 		text-align: center;
+	}
+
+	&-title {
+		font-size: 3em;
+		font-weight: 600;
+	}
+
+	&-subtitle {
+		font-size: 2em;
+		font-weight: 400;
 	}
 }
 
