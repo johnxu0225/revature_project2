@@ -1,7 +1,5 @@
 package com.revature.project2.services;
 
-import java.util.Optional;
-
 import com.revature.project2.security.utils.ObjectUpdater;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -32,12 +30,9 @@ public class UserServices {
     public void update(User user) {
         var dbData = getUserByUsername(user.getUsername());
         ObjectUpdater.copyNonNullValues(dbData,user);
-        if(user.getUserId() == 0){
-            var dbUser = getUserByUsername(user.getUsername());
-            user.setUserId(dbUser.getUserId());
-        }
-
-        if(!isValidUser(user)) throw new IllegalArgumentException("Invalid user object");
+        user.setUserId(dbData.getUserId());
+        if(!isValidUser(user))
+            throw new IllegalArgumentException("Invalid user object");
         userRepository.save(user);
     }
 
@@ -82,12 +77,4 @@ public class UserServices {
         return outgoingUsers;
     }
 
-    public void deleteUser(Integer id) {
-        logger.info("Deleting user with id: " + id);
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("Error: User not found with id: " + id);
-        }
-        userRepository.delete(user.get());
-    }
 }

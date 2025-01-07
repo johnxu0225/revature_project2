@@ -1,0 +1,41 @@
+# Build an image from a Dockerfile in the current directory
+# The dot (.) represents the current working directory
+docker image build -t project2-app .
+
+# List available images
+docker image ls
+
+# Delete an image
+# You can specify the image by name or use the first few digits of the image ID
+docker image rm <image-name or first digits>
+
+# Create a container
+# Creates a container if not created and run it. Add -d key to run the container without output
+docker container run --name app-container -p 8080:8080 project2-app
+
+# Create a container without running it
+# Note: When creating a container, use 'docker container create' with the 'IMAGE_NAME' (e.g., project2-app) instead of just 'project2'
+docker container create --name app-container -p 8080:8080 project2-app
+
+# List available containers, including stopped ones (use -a to show all containers)
+docker container ls -a
+
+# Run the container (with the name you assigned when creating it). add -ai key to see the output
+docker container start app-container
+
+# Stop or remove a container
+# Remove the container by name or first digits of the container ID
+docker container stop/rm <container-name or first digits>
+
+# Tag image
+# Before uploading to DockerHub, tag the image and create repository project2-app on DockerHub
+docker tag project2-app yourusername/project2-app:latest
+# Login to your docker account using
+docker login
+# Push the image
+docker push yourusername/project2-app:latest
+# Now you can download the image anywhere using
+docker run --name app-container -p 8080:8080 yourusername/project2-app:latest
+
+
+
