@@ -121,4 +121,5 @@ public class UserServiceTests {
         Assertions.assertTrue(outUserList.size()==1);
         Assertions.assertTrue("User1".equals(outUserList.get(0).getUsername()));
     }
+
 }
