@@ -4,10 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.scss";
 
+import useStore from "../../stores";
+
 export const Login: React.FC = () => {
   const [username, setUsername] = useState(""); // Changed to username
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+	const user = useStore((state) => state.user);
+	const setUser = useStore((state) => state.setUser);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +25,18 @@ export const Login: React.FC = () => {
       );
 
       console.log("Login successful:", response.data);
+      // Set user information in the store
+      // Change this to actual information later
+      setUser({
+        loggedIn: true,
+	
+        user_id: -1,
+        username: "",
+        role: "",
+        first_name: "",
+        last_name: "",
+        access_token: ""
+      })
       alert("Login successful!");
       navigate("/envelopes"); // Navigate to envelopes
     } catch (err) {
