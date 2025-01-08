@@ -1,6 +1,6 @@
 :root {
-  --green: #46C377;
-  --dark-green: #23A455;
+  --green: #46c377;
+  --dark-green: #23a455;
   --light-green: #23a45486;
   --purple: #8b4dfe;
   --white: #ffffff;
@@ -86,4 +86,16 @@
 .highlight-text {
   color: var(--purple);
   font-weight: bold;
+}
+
+/* Hide left pane in mobile view */
+@media (max-width: 768px) {
+  .login-text {
+    display: none;
+  }
+
+  .login-form {
+    width: 100%; /* Take full width when the left pane is hidden */
+    margin: 0 auto; /* Center the form */
+  }
 }

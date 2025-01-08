@@ -25,13 +25,12 @@ public class User {
     @Column(nullable = false)
     private String lastName;
     @Column(nullable = false)
-    private String role = "employee";
+    private String role; // default value provided in UserManagemenetService
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Envelope> envelopes;
 
-    public User() {
-    }
+    public User() {}
 
     public User(String username, String password, String email, String firstName, String lastName, String role) {
         this.username = username;

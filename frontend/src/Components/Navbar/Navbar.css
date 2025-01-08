@@ -29,3 +29,11 @@
 .oval-button:focus {
   outline: none; 
 }
+
+
+/* Hide Navbar in Mobile View */
+@media (max-width: 768px) {
+  #appbar {
+    display: none;
+  }
+}
