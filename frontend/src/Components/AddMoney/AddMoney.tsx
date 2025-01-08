@@ -3,11 +3,12 @@ import "./AddMoney.css";
 import { useEffect, useState } from "react";
 import { EnvelopeListCard } from "./EnvelopeListCard";
 import { Envelope } from './AddMoneyInterfaces';
+import axios from "axios";
 
 export const AddMoney: React.FC = () => {
-    const [from, setFrom] = useState("");
-    const [amount, setAmount] = useState("");
+    const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [amount, setAmount] = useState("");
     const [enableBtn, setEnableBtn] = useState(true);
     const [error, setError] = useState("");
     
@@ -15,29 +16,32 @@ export const AddMoney: React.FC = () => {
 
     const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(from);
-        console.log(desc);
-        console.log(amount);
         if (
             envs.reduce((acc, env) => acc + parseInt(env.amount), 0) == parseInt(amount) && 
             parseInt(amount) > 0
         ) {
             // TODO: send data to backend
-            // const response = await axios.post("http://localhost:8080/users", {
-            //     username: "benm",
-            //     password: "password"
-            // }, {
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     }
-            // });
-            // console.log(response.data);
+            envs.forEach(async (env) => {
+                if (parseInt(env.amount) > 0) {
+                    await axios.post("http://localhost:8080/envelopes/allocate/id", {
+                        title: title,
+                        transactionDescription: desc,
+                        transactionAmount: parseInt(env.amount),
+                        category: ""
+                    }, {
+                        headers: {
+                            // "Content-Type": "application/json"
+                            "Authentication": "Bearer " // TODO: Add token here
+                        }
+                    });
+                }
+            });
         }
     };
 
-    // TODO: fetch envelopes
+    // TODO: remove when fetch is implemented
     for (let i = 0; i < 5; i++) {
-        const [amount2, setAmount2] = useState("0");
+        const [amountTemp, setAmountTemp] = useState("0");
         envs.push({
             envelope_id: i,
             user_id: 1,
@@ -45,11 +49,36 @@ export const AddMoney: React.FC = () => {
             balance: 50,
             max_limit: 50,
             envelope_history: [],
-            amount: amount2,
-            setAmount: setAmount2
+            amount: amountTemp,
+            setAmount: setAmountTemp
         });
     }
 
+    // Fetches all envelopes
+    useEffect(() => {
+        axios.get("http://localhost:8080/envelopes", {
+            headers: {
+                // "Content-Type": "application/json",
+                "Authentication": "Bearer " // TODO: Add token here
+            }
+        }).then((response) => {
+            console.log(response.data);
+            // TODO: add to envs
+            // const [amountTemp, setAmountTemp] = useState("0");
+            // envs.push({
+            //     envelope_id: response.data.envelope_id,
+            //     user_id: response.data.user_id,
+            //     envelope_description: response.data.description,
+            //     balance: response.data.balance,
+            //     max_limit: response.data.limit,
+            //     envelope_history: response.data.history,
+            //     amount: amountTemp,
+            //     setAmount: setAmountTemp
+            // });
+        });
+    }, []);
+
+    // Error checks amount usage as envelopes fill
     useEffect(() => {
         const sum = envs.reduce((acc, env) => acc + parseInt(env.amount), 0);
         if (amount == "" && sum != 0) {
@@ -78,7 +107,7 @@ export const AddMoney: React.FC = () => {
                         label="Recieved From?"
                         fullWidth
                         margin="normal"
-                        onChange={(e) => setFrom(e.target.value)}
+                        onChange={(e) => setTitle(e.target.value)}
                         required
                     />
                     <TextField
