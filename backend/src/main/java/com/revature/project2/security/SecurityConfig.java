@@ -19,6 +19,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class SecurityConfig {
@@ -69,18 +71,18 @@ public class SecurityConfig {
                 .authenticationProvider(jwtAuthProvider)
                 .build();
     }
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry
-//                        .addMapping("/**")
-//                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-//                        .allowedOriginPatterns("*")
-//                        .allowCredentials(true)
-//                        .allowedHeaders("*");
-//            }
-//        };
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/**")
+                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                        .allowedOriginPatterns("*")
+                        .allowCredentials(true)
+                        .allowedHeaders("*");
+            }
+        };
+    }
 }
