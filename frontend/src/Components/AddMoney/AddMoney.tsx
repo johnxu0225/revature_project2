@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { EnvelopeListCard } from "./EnvelopeListCard";
 import { Envelope } from './AddMoneyInterfaces';
 import axios from "axios";
+import useStore from "../../stores";
 
 export const AddMoney: React.FC = () => {
     const [title, setTitle] = useState("");
@@ -11,6 +12,10 @@ export const AddMoney: React.FC = () => {
     const [amount, setAmount] = useState("");
     const [enableBtn, setEnableBtn] = useState(true);
     const [error, setError] = useState("");
+	const user = useStore((state: any) => state.user);
+	// const setUser = useStore((state: any) => state.setUser);
+
+    console.log(user);
     
     let envs: Envelope[] = [];
 
