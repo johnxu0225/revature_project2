@@ -2,8 +2,11 @@ import {ExpandCircleDown } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid2, ListItem, Stack, TextField, Typography } from "@mui/material"
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
+import {UserInfo} from "../../stores";
+import useStore  from "../../stores";
 
 import './DetailedEnvelope.scss';
+import axios from "axios";
 
 interface Transaction {
   transaction_id: number;
@@ -39,6 +42,8 @@ export const DetailedEnvelope:React.FC = () =>{
     const [openEdit, setOpenEdit] = useState(false);
     const [transactiontoEdit, setTransactiontoEdit] = useState<Transaction>({transaction_id: 0, title: "", amount: 0, date: new Date(), description: "", category: ""});
 
+    const user:UserInfo = useStore((state: any) => state.user);
+
     const [envelope, setEnvelope] = useState<Envelope>({
       envelope_id: 0,
       user_id: 0,
@@ -50,6 +55,12 @@ export const DetailedEnvelope:React.FC = () =>{
     const [amountHistoryWithDate, setAmountHistoryWithDate] = useState([{}]);
 
     useEffect(()=>{
+
+
+      //fetch envelope info
+
+      
+      //fetch transactions
       
       setTransactions([
      {transaction_id: 1, title: "Movie Outing", amount: -100, date: new Date("2022-03-05"), description: "Went to the movies with friends.",category: "Entertainment"},
