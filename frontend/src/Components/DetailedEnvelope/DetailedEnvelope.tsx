@@ -1,13 +1,15 @@
 import {ExpandCircleDown } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, Divider, Grid2, ListItem, Stack, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid2, ListItem, Stack, TextField, Typography } from "@mui/material"
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
+
+import './DetailedEnvelope.scss';
 
 interface Transaction {
   transaction_id: number;
   title: string;
   amount: number;
-  date: string;
+  date: Date;
   description: string;
   category: string;
 }
@@ -33,6 +35,10 @@ export const DetailedEnvelope:React.FC = () =>{
 
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [envelopeHistory, setEnvelopeHistory] = useState<EnvelopeHistory[]>([]);
+
+    const [openEdit, setOpenEdit] = useState(false);
+    const [transactiontoEdit, setTransactiontoEdit] = useState<Transaction>({transaction_id: 0, title: "", amount: 0, date: new Date(), description: "", category: ""});
+
     const [envelope, setEnvelope] = useState<Envelope>({
       envelope_id: 0,
       user_id: 0,
@@ -44,12 +50,12 @@ export const DetailedEnvelope:React.FC = () =>{
     useEffect(()=>{
       
       setTransactions([
-     {transaction_id: 1, title: "Movie Outing", amount: -100, date: "10/10/21", description: "Went to the movies with friends.",category: "Entertainment"},
-      {transaction_id: 2, title: "Paycheck", amount: 500, date: "10/12/21", description: "Bi-weekly paycheck.",category: "Income"},
-      {transaction_id: 3, title: "Groceries", amount: -50, date: "10/20/21", description: "Groceries for the week.",category: "Food"},
-      {transaction_id: 4, title: "Gas", amount: -25, date: "10/30/21", description: "Filled up the car.", category: "Transportation"},
-      {transaction_id: 5, title: "Dinner", amount: -30, date: "11/1/21", description: "Dinner with friends.", category: "Food"},
-      {transaction_id: 6, title: "Paycheck", amount: 500, date: "11/12/21", description: "Bi-weekly paycheck.", category: "Income"},
+     {transaction_id: 1, title: "Movie Outing", amount: -100, date: new Date("2022-03-05"), description: "Went to the movies with friends.",category: "Entertainment"},
+      {transaction_id: 2, title: "Paycheck", amount: 500, date: new Date("2022-03-05"), description: "Bi-weekly paycheck.",category: "Income"},
+      {transaction_id: 3, title: "Groceries", amount: -50, date: new Date("2022-03-05"), description: "Groceries for the week.",category: "Food"},
+      {transaction_id: 4, title: "Gas", amount: -25, date: new Date("2022-03-05"), description: "Filled up the car, then did a bunch of other stuff. Now, where was I? blah blah blah", category: "Transportation"},
+      {transaction_id: 5, title: "Dinner", amount: -30, date: new Date("2022-03-05"), description: "Dinner with friends.", category: "Food"},
+      {transaction_id: 6, title: "Paycheck", amount: 500, date: new Date("2022-03-05"), description: "Bi-weekly paycheck.", category: "Income"},
     ]);
       
       setEnvelope({envelope_id:0,user_id:1,envelope_description: "Basically Whatever Goes", max_limit: 4000, balance: 5000});
@@ -85,20 +91,8 @@ export const DetailedEnvelope:React.FC = () =>{
         transaction_id: 6,
         envelope_amount: 5895
       }])
-      const getEnvelopeAmountsWithDates = () => {
-        return envelopeHistory
-          .sort((a, b) => a.amount_history_id - b.amount_history_id)
-          .map(history => {
-            const transaction = transactions.find(t => t.transaction_id === history.transaction_id);
-            return {
-              envelope_amount: history.envelope_amount,
-              date: transaction ? transaction.date : "Unknown date"
-            };
-          });
-      };
-
-      const envelopeAmountsWithDates = getEnvelopeAmountsWithDates();
-      console.log(envelopeAmountsWithDates);
+      
+    
     },[])
 
     return (
@@ -110,7 +104,12 @@ export const DetailedEnvelope:React.FC = () =>{
         <Grid2
           container
           spacing={2}
-          sx={{ margin: "auto", alignItems: "center", maxWidth: "90%" }}
+          sx={{
+            margin: "auto",
+            alignItems: "center",
+            maxWidth: { xs: "90%", md: "70%" },
+          }}
+          id="mainContainer"
         >
           {/* Each subsequent child Grid2 element represents a row/column. Size of a row in a grid is 12, so we use size prop to adjust the width of the column. */}
           <Grid2
@@ -134,7 +133,7 @@ export const DetailedEnvelope:React.FC = () =>{
               {/* CardHeader component to display envelope description and remaining amount (balance - max limit) */}
               <CardHeader
                 sx={{
-                  backgroundColor: "green",
+                  backgroundColor: "#23A455",
                   color: "white",
                   textAlign: "center",
                 }}
@@ -213,7 +212,9 @@ export const DetailedEnvelope:React.FC = () =>{
                       <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                         Transactions
                       </Typography>
-                      <Button>New</Button>
+                      <Button id="newButton" variant="contained">
+                        New
+                      </Button>
                     </Stack>
                   </>
                 }
@@ -248,8 +249,21 @@ export const DetailedEnvelope:React.FC = () =>{
                               </Typography>
                             </ListItem>
                             <ListItem>
-                              <Stack direction={{ xs: "column-reverse", md: "row" }} sx={{justifyContent: "space-between", width: "100%"}}>
-                                <Typography>{transaction.date}</Typography>
+                              <Stack
+                                direction={{ xs: "column-reverse", md: "row" }}
+                                sx={{
+                                  justifyContent: "space-between",
+                                  width: "100%",
+                                }}
+                              >
+                                <Typography color="palette.secondary.light">
+                                  {transaction.date.getMonth()}/
+                                  {transaction.date.getDate()}/
+                                  {transaction.date
+                                    .getFullYear()
+                                    .toString()
+                                    .substr(-2)}
+                                </Typography>
                                 {transaction.amount > 0 ? (
                                   <Typography
                                     sx={{ color: "green", fontWeight: "bold" }}
@@ -279,10 +293,17 @@ export const DetailedEnvelope:React.FC = () =>{
                           >
                             <Typography>{transaction.description}</Typography>
                             <Typography sx={{ fontWeight: "bold" }}>
-                              {" "}
                               {transaction.category}
                             </Typography>
-                            <Button>Edit</Button>
+                            <Button
+                              className="editButton"
+                              onClick={() => {
+                                setTransactiontoEdit(transaction);
+                                setOpenEdit(true);
+                              }}
+                            >
+                              Edit
+                            </Button>
                           </Stack>
                         </AccordionDetails>
                       </Accordion>
@@ -304,7 +325,7 @@ export const DetailedEnvelope:React.FC = () =>{
                 }
               />
               <CardContent>
-                <Box sx={{ width: "100%", height: 200 }}>
+                <Box sx={{ width: "100%", height: "315px" }}>
                   <LineChart
                     series={[
                       {
@@ -313,7 +334,7 @@ export const DetailedEnvelope:React.FC = () =>{
                             (a, b) => a.amount_history_id - b.amount_history_id
                           )
                           .map((history) => history.envelope_amount),
-                        color: "green",
+                        color: "#8b4dfe",
                       },
                     ]}
                   />
@@ -322,6 +343,45 @@ export const DetailedEnvelope:React.FC = () =>{
             </Card>
           </Grid2>
         </Grid2>
+
+        <Dialog
+          open={openEdit}
+          onClose={() => {
+            setOpenEdit(false);
+          }}  
+        >
+          <DialogTitle>Edit Transaction</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+             
+            </DialogContentText>
+            <br />
+            <Stack direction="column" spacing={2}>
+            <TextField
+              id="title"
+              label="Title"
+              defaultValue={transactiontoEdit.title}
+            />
+            <TextField
+              id="description"
+              label="Description"
+              multiline
+              maxRows={5}
+              defaultValue={transactiontoEdit.description}
+            />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setOpenEdit(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Submit</Button>
+          </DialogActions>
+        </Dialog>
       </>
     );
 }
