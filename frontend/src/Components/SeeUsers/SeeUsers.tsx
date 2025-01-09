@@ -1,23 +1,67 @@
 import { Box, Typography } from "@mui/material";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
+import useStore, { UserInfo } from "../../stores";
+import { useNavigate } from "react-router-dom";
+
+interface User {
+    userId: number,
+	firstName: string,
+	lastName: string
+	username: string,
+    email: string,
+	role: string,
+}
 
 export default function () {
-    const [users, setUsers] = useState([
-        { id: 1, firstName: "John", lastName: "Doe", username: "johndoe", role: "ROLE_MANAGER" },
-        { id: 2, firstName: "Jane", lastName: "Smith", username: "janesmith", role: "ROLE_EMPLOYEE" },
-    ]);
+    const u: UserInfo = useStore((state: any) => state.user);
+    const [users, setUsers] = useState<User[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        // Check if user is manager
+        if (u.role !== "ROLE_MANAGER") {
+            console.log("You are not authorized to view this page.");
+            navigate("/");
+            return;
+        }
+
         // Fetch users from the server
-        fetch("http://localhost:8080/api/users", {
+        fetch("http://localhost:8080/users", {
             method: "GET",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                Auth
+                Authorization: "Bearer " + u.token,
             }
+        }).then(res => {
+            return res.json();
+        }).then(body => {
+            setUsers(body);
         })
     }, []);
+
+    const handleDeleteUser = (username: string) => {
+        // Delete user
+        fetch(`http://localhost:8080/users/${username}`, {
+            method: "DELETE",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + u.token,
+            }
+        }).then(res => {
+            return res.json();
+        }).then(_body => {
+            // TODO: check failed
+            setUsers(users.filter(user => user.username !== username));
+        });
+    };
+
+    // const handlePromoteUser = (username: string) => {
+
+    // }
+
     return (
         <Box sx={{ width: "75vw", margin: "auto", paddingTop: "2rem" }}>
             <Typography variant="h4" gutterBottom>
@@ -30,26 +74,30 @@ export default function () {
                             <TableCell sx={{ width: "50px" }}>ID</TableCell>
                             <TableCell>Name</TableCell>
                             <TableCell>Username</TableCell>
+                            <TableCell>Email</TableCell>
                             <TableCell sx={{ width: "150px" }}>Role</TableCell>
-                            <TableCell sx={{ width: "250px" }}>Actions</TableCell>
+                            <TableCell sx={{ width: "100px" }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user.id}>
-                                <TableCell sx={{ width: "50px" }}>{user.id}</TableCell>
+                            <TableRow key={user.userId}>
+                                <TableCell sx={{ width: "50px" }}>{user.userId}</TableCell>
                                 <TableCell>{user.firstName} {user.lastName}</TableCell>
                                 <TableCell>{user.username}</TableCell>
+                                <TableCell>{user.email}</TableCell>
                                 <TableCell sx={{ width: "150px" }}>{user.role}</TableCell>
-                                <TableCell sx={{ width: "250px" }}>
-                                    {user.role == "ROLE_EMPLOYEE" &&
+                                <TableCell sx={{ width: "100px" }}>
+                                    {/* {user.role == "ROLE_EMPLOYEE" && //250px with both buttons
                                         <Button variant="contained" color="secondary" sx={{ marginRight: "1rem" }}>
                                             Promote
                                         </Button>
-                                    }
-                                    <Button variant="contained" color="secondary">
-                                        Delete
-                                    </Button>
+                                    } */}
+                                    {user.userId != u.userId &&
+                                        <Button variant="contained" color="secondary" onClick={() => handleDeleteUser(user.username)}>
+                                            Delete
+                                        </Button>
+                                    }  
                                 </TableCell>
                             </TableRow>
                         ))}
