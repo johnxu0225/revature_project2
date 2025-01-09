@@ -22,23 +22,28 @@ export const Login: React.FC = () => {
         "http://localhost:8080/users", // Adjust to your backend login endpoint
         { username, password }, 
         { withCredentials: true } // Important for cookies/JWT
-      );
+      ).then((res) => {
+        console.log("Login successful:", res.data);
+        // Set user information in the store
+        // Change this to actual information later
+        setUser({
+          loggedIn: true,
+    
+          userId: res.data.userId,
+          username: res.data.username,
+          role: res.data.role,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          token: res.data.token
+        });
+        
+        // Set token in localstorage for later logins
+				localStorage.setItem("gooderBudgetToken", res.data.token);
 
-      console.log("Login successful:", response.data);
-      // Set user information in the store
-      // Change this to actual information later
-      setUser({
-        loggedIn: true,
-	
-        user_id: -1,
-        username: "",
-        role: "",
-        first_name: "",
-        last_name: "",
-        access_token: ""
-      })
-      alert("Login successful!");
-      navigate("/envelopes"); // Navigate to envelopes
+        alert("Login successful!");
+        navigate("/envelopes"); // Navigate to envelopes
+      });
+
     } catch (err) {
       console.error("Login failed:", err);
     }

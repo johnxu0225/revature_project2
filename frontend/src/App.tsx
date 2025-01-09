@@ -5,8 +5,20 @@ import { Register } from "./Components/Auth/Register";
 import { Personalize } from "./Components/Auth/Personalize";
 import { AddMoney } from "./Components/AddMoney/AddMoney";
 import { EnvelopeList } from "./Components/Envelopes/EnvelopeList";
+import { useEffect } from "react";
 
 function App() {
+  // Login on page refresh
+  useEffect(() => {
+
+		let token = localStorage.getItem("gooderBudgetToken");
+		if (token === null) token = "";
+    if (token !== "") {
+      // Do stuff here later
+      console.log(token);
+    }
+  }, []);
+
   return (
     <>
       <BrowserRouter>
