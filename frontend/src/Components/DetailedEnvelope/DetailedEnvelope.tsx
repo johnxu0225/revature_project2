@@ -47,6 +47,8 @@ export const DetailedEnvelope:React.FC = () =>{
       balance: 0
     });
 
+    const [amountHistoryWithDate, setAmountHistoryWithDate] = useState([{}]);
+
     useEffect(()=>{
       
       setTransactions([
@@ -55,7 +57,7 @@ export const DetailedEnvelope:React.FC = () =>{
       {transaction_id: 3, title: "Groceries", amount: -50, date: new Date("2022-03-05"), description: "Groceries for the week.",category: "Food"},
       {transaction_id: 4, title: "Gas", amount: -25, date: new Date("2022-03-05"), description: "Filled up the car, then did a bunch of other stuff. Now, where was I? blah blah blah", category: "Transportation"},
       {transaction_id: 5, title: "Dinner", amount: -30, date: new Date("2022-03-05"), description: "Dinner with friends.", category: "Food"},
-      {transaction_id: 6, title: "Paycheck", amount: 500, date: new Date("2022-03-05"), description: "Bi-weekly paycheck.", category: "Income"},
+      {transaction_id: 6, title: "Paycheck", amount: 500, date: new Date("2021-03-05"), description: "Bi-weekly paycheck.", category: "Income"},
     ]);
       
       setEnvelope({envelope_id:0,user_id:1,envelope_description: "Basically Whatever Goes", max_limit: 4000, balance: 5000});
@@ -92,6 +94,11 @@ export const DetailedEnvelope:React.FC = () =>{
         envelope_amount: 5895
       }])
       
+      let temp = envelopeHistory.map((history) => {
+        return {date: transactions.find((transaction) => transaction.transaction_id === history.transaction_id)?.date.toDateString(), envelope_amount: history.envelope_amount}
+      })
+
+      setAmountHistoryWithDate(temp);
     
     },[])
 
@@ -223,12 +230,12 @@ export const DetailedEnvelope:React.FC = () =>{
               {/* mapping out transactions to display in accordions. Sorting by transaction_id to display most recent transactions first. */}
               <CardContent sx={{ overflowY: "auto", maxHeight: "350px" }}>
                 {transactions.length === 0 ? (
-                  <Typography variant="h4" sx={{ textAlign: "center" }}>
+                    <Typography variant="h4" sx={{ textAlign: "center" }}>
                     No transactions.{" "}
-                  </Typography>
-                ) : (
-                  transactions
-                    .sort((a, b) => b.transaction_id - a.transaction_id)
+                    </Typography>
+                  ) : (
+                    transactions
+                    .sort((a, b) => b.date.getTime() - a.date.getTime())
                     .map((transaction) => (
                       <Accordion sx={{ boxShadow: 1 }}>
                         <AccordionSummary
@@ -329,9 +336,9 @@ export const DetailedEnvelope:React.FC = () =>{
                   <LineChart
                     series={[
                       {
-                        data: envelopeHistory
+                        data: amountHistoryWithDate
                           .sort(
-                            (a, b) => a.amount_history_id - b.amount_history_id
+                            (a, b) => a.date.getTime() - b.date.getTime()
                           )
                           .map((history) => history.envelope_amount),
                         color: "#8b4dfe",
