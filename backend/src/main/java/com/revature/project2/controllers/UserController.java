@@ -59,6 +59,12 @@ public class UserController {
         return ResponseEntity.ok(userServices.getAllUsers());
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<OutgoingUserDTO> getUser(@PathVariable String username){
+        User user = userServices.getUserByUsername(username);
+        return  ResponseEntity.ok(new OutgoingUserDTO(user.getUserId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole() ));
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody String username){
         userManagementService.deleteUser(username);
