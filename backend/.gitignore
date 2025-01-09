@@ -35,4 +35,6 @@ build/
 ### VS Code ###
 .vscode/
 
+# do not leak your database credentials
+application.properties
 main/resources/application.properties
