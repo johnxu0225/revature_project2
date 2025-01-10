@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import useStore, { UserInfo } from "../../stores";
-import { useNavigate } from "react-router-dom";
 
 interface User {
     userId: number,
@@ -16,17 +15,10 @@ interface User {
 export default function () {
     const u: UserInfo = useStore((state: any) => state.user);
     const [users, setUsers] = useState<User[]>([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        // Check if user is manager
-        if (u.role !== "ROLE_MANAGER") {
-            console.log("You are not authorized to view this page.");
-            navigate("/");
-            return;
-        }
-
         // Fetch users from the server
+        console.log(u);
         fetch("http://localhost:8080/users", {
             method: "GET",
             credentials: "include",
@@ -37,9 +29,12 @@ export default function () {
         }).then(res => {
             return res.json();
         }).then(body => {
-            setUsers(body);
+            console.log(body);
+            if (!body.hasOwnProperty("error")) {
+                setUsers(body);
+            }
         })
-    }, []);
+    }, [u]);
 
     const handleDeleteUser = (username: string) => {
         // Delete user
