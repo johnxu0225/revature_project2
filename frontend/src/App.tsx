@@ -27,7 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/en" element={<DetailedEnvelope />} />
+          <Route path="/en/:id" element={<DetailedEnvelope />} />
           <Route path="/personalize" element={<Personalize />} />
           <Route path="/add" element={<AddMoney />} />
           <Route path="/envelopes" element={<EnvelopeList />} />
