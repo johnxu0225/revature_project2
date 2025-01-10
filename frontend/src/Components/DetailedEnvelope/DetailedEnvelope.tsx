@@ -133,8 +133,20 @@ export const DetailedEnvelope:React.FC = () =>{
       }
 
       if (currentTransaction?.category !== transactiontoEdit.category) {
-        console.log("Category changed from ", currentTransaction?.category, " to ", transactiontoEdit.category);
-
+         try{
+          await axios.patch(`http://localhost:8080/transactions/category/${transactiontoEdit.transactionId}`,transactiontoEdit.category,{headers: {Authorization:`Bearer ${user.token}`, "Content-Type": "text/plain"}, withCredentials: true});
+          setTransactions(transactions.map((transaction) => {
+            if (transaction.transactionId === transactiontoEdit.transactionId) {
+              return {...transaction, category: transactiontoEdit.category};
+            } else {
+              return transaction;
+             }
+            }));
+            toastAlert("Category changed successfully!");
+          }
+          catch(err){
+           toastAlert("Error editing transaction category.");
+          }
       }
       
     }
@@ -434,7 +446,7 @@ export const DetailedEnvelope:React.FC = () =>{
                         <Divider />
                       </Grid2>
                       <Grid2 size={6}>
-                        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                        <Typography variant="h5" >
                           Remaining
                         </Typography>
                       </Grid2>
@@ -766,13 +778,14 @@ export const DetailedEnvelope:React.FC = () =>{
                     defaultValue={transactiontoEdit.transactionDescription}
                     onChange={changeEditTransactionValues}
                   />
-                  {/* <TextField
+                  <TextField
                     id="editTransactionCategory"
                     name="category"
                     label="Category"
+                    error={transactiontoEdit.category === ""}
                     defaultValue={transactiontoEdit.category}
                     onChange={changeEditTransactionValues}
-                  />*/}
+                  />
                 </Stack>
               </DialogContent>
               <DialogActions>
@@ -786,7 +799,8 @@ export const DetailedEnvelope:React.FC = () =>{
                 <Button
                   disabled={
                     transactiontoEdit.title === "" ||
-                    transactiontoEdit.transactionDescription === ""
+                    transactiontoEdit.transactionDescription === "" ||
+                    transactiontoEdit.category === ""
                   }
                   type="submit"
                   onClick={(e) => {
