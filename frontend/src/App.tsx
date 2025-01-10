@@ -8,6 +8,7 @@ import { AddMoney } from "./Components/AddMoney/AddMoney";
 import { EnvelopeList } from "./Components/Envelopes/EnvelopeList";
 import { CreateEnvelope } from "./Components/CreateEnvelope/CreateEnvelope";
 import { useEffect } from "react";
+import SeeUsers from "./Components/SeeUsers/SeeUsers";
 import useStore, { UserInfo } from "./stores";
 
 function App() {
@@ -41,8 +42,9 @@ function App() {
           <Route path="/personalize" element={<Personalize />} />
           <Route path="/new_envelope" element={<CreateEnvelope />} />
           <Route path="/envelopes" element={<EnvelopeList />} />
-          <Route path="/en" element={<DetailedEnvelope />} />
+          <Route path="/en/:id" element={<DetailedEnvelope />} />
           <Route path="/add" element={<AddMoney />} />
+          <Route path="/users" element={<SeeUsers />} />
         </Routes>
       </BrowserRouter>
     </>
