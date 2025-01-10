@@ -145,7 +145,7 @@ export const AddMoney: React.FC = () => {
                         {error}
                     </Typography>
                 </Box>
-                <Box className="envelope-list">
+                <Box className="envelope-list" sx={{ maxHeight: '600px', overflowY: 'auto' }}>
                     {envs.map((env, index) => {
                         let color = "envelope-header-warning";
                         if (env.balance == env.max_limit) {
