@@ -7,18 +7,28 @@ import { Personalize } from "./Components/Auth/Personalize";
 import { AddMoney } from "./Components/AddMoney/AddMoney";
 import { EnvelopeList } from "./Components/Envelopes/EnvelopeList";
 import { useEffect } from "react";
+import useStore, { UserInfo } from "./stores";
 
 function App() {
+  const setUser = useStore((state) => state.setUser);
   // Login on page refresh
-  useEffect(() => {
+    useEffect(() => {
+      const token = localStorage.getItem("gooderBudgetToken");
 
-		let token = localStorage.getItem("gooderBudgetToken");
-		if (token === null) token = "";
-    if (token !== "") {
-      // Do stuff here later
-      console.log(token);
-    }
-  }, []);
+      if (token) {
+        // Parse stored user information (if any)
+        const userInfo = JSON.parse(
+          localStorage.getItem("gooderBudgetUser") || "{}"
+        );
+
+        if (userInfo && userInfo.token) {
+          setUser({
+            loggedIn: true,
+            ...userInfo,
+          });
+        }
+      }
+    }, [setUser]);
 
   return (
     <>
