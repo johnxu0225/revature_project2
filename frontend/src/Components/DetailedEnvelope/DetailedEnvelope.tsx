@@ -1,5 +1,5 @@
-import {CloseOutlined, ExpandCircleDown } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid2, IconButton, InputAdornment, ListItem, Menu, MenuItem, Snackbar, Stack, TextField, Typography } from "@mui/material"
+import {AttachMoney, Category, CloseOutlined, ExpandCircleDown, Money } from "@mui/icons-material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, FormControlLabel, Grid2, IconButton, InputAdornment, ListItem, Menu, MenuItem, Snackbar, Stack, Switch, TextField, Typography } from "@mui/material"
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import {UserInfo} from "../../stores";
@@ -436,9 +436,11 @@ export const DetailedEnvelope:React.FC = () =>{
                           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
                             Transactions
                           </Typography>
+
+
                           {/* Filter and Options buttons */}
-                          
-                          <Button id="categoryButton" onClick={()=>{setFilterMenu(true)}}>Filter</Button>
+                          <Button id="categoryButton" size="small"onClick={()=>{setFilterMenu(true)}}>Filter</Button>
+        
                           {envelope.user !=null ?
                           <Button
                             onClick={() => {
@@ -450,6 +452,8 @@ export const DetailedEnvelope:React.FC = () =>{
                             Options
                           </Button>
                           : <></>}
+
+
                           {/* Menu for creating transactions */}
                           <Menu
                             open={transactionMenu}
@@ -471,7 +475,7 @@ export const DetailedEnvelope:React.FC = () =>{
                                 navigate("/add");
                               }}
                             >
-                              Add Money
+                              <AttachMoney/>Add Money
                             </MenuItem>
                             <MenuItem
                               onClick={() => {
@@ -525,18 +529,18 @@ export const DetailedEnvelope:React.FC = () =>{
                             anchorEl={document.getElementById("categoryButton")}
                             anchorOrigin={{
                               vertical: "bottom",
-                              horizontal: "left",
+                              horizontal: "right",
                             }}
-                            transformOrigin={{
-                              vertical: "top",
-                              horizontal: "left",
-                            }}
+                            sx ={{overflowY: "auto"}}
                           >
+                            
                             <MenuItem sx={{ fontWeight: "bold" }}
                               onClick={() => {
                                 setFilteredCategory("All");
                                 setFilterMenu(false);
                               }}>All</MenuItem>
+                              <MenuItem sx={{ fontWeight: "bold" }} disabled
+                              >Category</MenuItem>
                             {allCategories.map((category) => {
                               return (
                                 <MenuItem 
