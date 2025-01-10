@@ -7,6 +7,7 @@ import { Personalize } from "./Components/Auth/Personalize";
 import { AddMoney } from "./Components/AddMoney/AddMoney";
 import { EnvelopeList } from "./Components/Envelopes/EnvelopeList";
 import { useEffect } from "react";
+import SeeUsers from "./Components/SeeUsers/SeeUsers";
 import useStore, { UserInfo } from "./stores";
 
 function App() {
@@ -37,10 +38,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/en" element={<DetailedEnvelope />} />
           <Route path="/personalize" element={<Personalize />} />
-          <Route path="/add" element={<AddMoney />} />
           <Route path="/envelopes" element={<EnvelopeList />} />
+          <Route path="/en/:id" element={<DetailedEnvelope />} />
+          <Route path="/add" element={<AddMoney />} />
+          <Route path="/users" element={<SeeUsers />} />
         </Routes>
       </BrowserRouter>
     </>
