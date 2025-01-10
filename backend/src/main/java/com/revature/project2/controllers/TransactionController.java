@@ -53,10 +53,10 @@ public class TransactionController {
     }
 
     @PatchMapping("/transactions/category/{id}")
-    public ResponseEntity<?> updateTransactionCategory(@PathVariable Integer id, @RequestBody String newDescription) {
+    public ResponseEntity<?> updateTransactionCategory(@PathVariable Integer id, @RequestBody String newCategory) {
 
         // Call the service layer to update the transaction category and return the updated transaction
-        return ResponseEntity.ok(transactionService.updateTransactionCategory(id, newDescription));
+        return ResponseEntity.ok(transactionService.updateTransactionCategory(id, newCategory));
     }
 
     @GetMapping("/transactions/envelope/{envelopeId}")
