@@ -1,5 +1,5 @@
 import {CloseOutlined, ExpandCircleDown } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid2, IconButton, ListItem, Menu, MenuItem, Snackbar, Stack, TextField, Typography } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Grid2, IconButton, InputAdornment, ListItem, Menu, MenuItem, Snackbar, Stack, TextField, Typography } from "@mui/material"
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import {UserInfo} from "../../stores";
@@ -8,44 +8,21 @@ import useStore  from "../../stores";
 import './DetailedEnvelope.scss';
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
-interface Transaction {
-  transactionId: number;
-  title: string;
-  transactionAmount: number;
-  datetime: Date;
-  transactionDescription: string;
-  category: string;
-}
-
-interface OutgoingTransaction {
-  title: string;
-  transactionAmount: number;
-  transactionDescription: string;
-  category: string;
-}
-
-interface Envelope {
-  envelopeId: number;
-  user: any;
-  envelopeDescription: string;
-  maxLimit: number;
-  balance: number;
-}
-
-interface EnvelopeHistory {
-  amountHistoryId: number;
-  envelope: Envelope;
-  transaction: Transaction;
-  envelopeAmount: number;
-}
-
+import { Envelope, EnvelopeHistory, OutgoingTransaction, Transaction } from "./DetailedEnvelopeInterfaces";
 
 export const DetailedEnvelope:React.FC = () =>{
 
     const statusColors = { low: "#8b4dfe", high: "#23A455" };
     const [statusColor, setStatusColor] = useState(statusColors.high);
 
+    const [envelope, setEnvelope] = useState<Envelope>({
+      envelopeId: 0,
+      user: null,
+      envelopeDescription: "",
+      maxLimit: 0,
+      balance: 0,
+    });
+    
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [envelopeHistory, setEnvelopeHistory] = useState<EnvelopeHistory[]>([]);
 
@@ -57,6 +34,8 @@ export const DetailedEnvelope:React.FC = () =>{
     const [transactiontoEdit, setTransactiontoEdit] = useState<Transaction>({transactionId: 0, title: "", transactionAmount: 0, datetime: new Date(), transactionDescription: "", category: ""});
     const [transactiontoCreate, setTransactiontoCreate] = useState<OutgoingTransaction>({title: "", transactionAmount: 0, transactionDescription: "", category: ""});
     const [createAmountError, setCreateAmountError] = useState(false);
+    const [edited, setEdited] = useState(false);
+    
 
     const [loading, setLoading] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
@@ -68,44 +47,30 @@ export const DetailedEnvelope:React.FC = () =>{
     // get the value from URL to use as envelope id when routed from main envelope screen
     const { id } = useParams();
     const navigate = useNavigate();
-  
 
-    const [envelope, setEnvelope] = useState<Envelope>({
-      envelopeId: 0,
-      user: null,
-      envelopeDescription: "",
-      maxLimit: 0,
-      balance: 0,
-    });
-
-    const [amountHistoryWithDate, setAmountHistoryWithDate] = useState([{}]);
 
     const toastAlert = (message:string) => {
       setAlertMessage(message);
       setShowAlert(true);
     }
 
+
+    // Transaction editing functions
     const changeEditTransactionValues = (event:any) =>{
       setTransactiontoEdit({...transactiontoEdit, [event.target.name]: event.target.value});
+      setEdited(true);
     }
 
     const editTransactionValues = async(event:any) =>{
       event.preventDefault();
 
       let currentTransaction = transactions.find((transaction) => transaction.transactionId === transactiontoEdit.transactionId);
+      let different = false;
 
       if (currentTransaction?.title !== transactiontoEdit.title) {
-        console.log("Title changed from ", currentTransaction?.title, " to ", transactiontoEdit.title);
+        different = true;
         try{
           await axios.patch(`http://localhost:8080/transactions/title/${transactiontoEdit.transactionId}`,transactiontoEdit.title,{headers: {Authorization:`Bearer ${user.token}`, "Content-Type": "text/plain"}, withCredentials: true});
-          setTransactions(transactions.map((transaction) => {
-            if (transaction.transactionId === transactiontoEdit.transactionId) {
-              return {...transaction, title: transactiontoEdit.title};
-            } else {
-              return transaction;
-             }
-            }));
-          toastAlert("Title changed successfully!");
           }
           catch(err){
             toastAlert("Error editing transaction title.");
@@ -114,18 +79,9 @@ export const DetailedEnvelope:React.FC = () =>{
       }
 
       if (currentTransaction?.transactionDescription !== transactiontoEdit.transactionDescription) {
-        console.log("Description changed from ", currentTransaction?.transactionDescription, " to ", transactiontoEdit.transactionDescription);
-
+        different = true;
          try{
           await axios.patch(`http://localhost:8080/transactions/description/${transactiontoEdit.transactionId}`,transactiontoEdit.transactionDescription,{headers: {Authorization:`Bearer ${user.token}`, "Content-Type": "text/plain"}, withCredentials: true});
-          setTransactions(transactions.map((transaction) => {
-            if (transaction.transactionId === transactiontoEdit.transactionId) {
-              return {...transaction, transactionDescription: transactiontoEdit.transactionDescription};
-            } else {
-              return transaction;
-             }
-            }));
-            toastAlert("Description changed successfully!");
           }
           catch(err){
            toastAlert("Error editing transaction description.");
@@ -133,24 +89,35 @@ export const DetailedEnvelope:React.FC = () =>{
       }
 
       if (currentTransaction?.category !== transactiontoEdit.category) {
+        different = true;
          try{
           await axios.patch(`http://localhost:8080/transactions/category/${transactiontoEdit.transactionId}`,transactiontoEdit.category,{headers: {Authorization:`Bearer ${user.token}`, "Content-Type": "text/plain"}, withCredentials: true});
-          setTransactions(transactions.map((transaction) => {
-            if (transaction.transactionId === transactiontoEdit.transactionId) {
-              return {...transaction, category: transactiontoEdit.category};
-            } else {
-              return transaction;
-             }
-            }));
-            toastAlert("Category changed successfully!");
           }
           catch(err){
            toastAlert("Error editing transaction category.");
           }
       }
+
+      if (different) {
+        toastAlert("Transaction edited successfully!");
+
+        setTransactions(
+        transactions.map((transaction) => {
+          if (transaction.transactionId === transactiontoEdit.transactionId) {
+            return { ...transaction, title: transactiontoEdit.title, transactionDescription: transactiontoEdit.transactionDescription, category: transactiontoEdit.category };
+          } else {
+            return transaction;
+          }
+        })
+      );
+      }
+      else{
+        toastAlert("No changes made to transaction.");
+      } 
       
     }
 
+    // Transaction creation (Spending) functions
     const changeCreateTransactionValues = (event:any) =>{
 
       if (event.target.name === "transactionAmount") {
@@ -189,157 +156,113 @@ export const DetailedEnvelope:React.FC = () =>{
           toastAlert("Transaction created successfully!");
         }).catch((err) => {
           toastAlert("Error creating transaction.");
+          console.error(err);
         });
     }
 
+
+    // Fetch envelope info, transactions, and envelope history at component mount
     useEffect(()=>{
-
-      //fetch envelope info
-      axios
-        .get(`http://localhost:8080/envelopes/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
-        .then((response) => {
-          setEnvelope({
-            envelopeId: response.data.envelope_id,
-            user: response.data.user,
-            envelopeDescription: response.data.envelopeDescription,
-            maxLimit: response.data.maxLimit,
-            balance: response.data.balance,
+      if(user.loggedIn){
+        //fetch envelope info
+        axios
+          .get(`http://localhost:8080/envelopes/${id}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+          .then((response) => {
+            setEnvelope({
+              envelopeId: response.data.envelope_id,
+              user: response.data.user,
+              envelopeDescription: response.data.envelopeDescription,
+              maxLimit: response.data.maxLimit,
+              balance: response.data.balance,
+            });
+            setRemaining(response.data.maxLimit - response.data.balance);
+            if (response.data.maxLimit - response.data.balance < 100) {
+              setStatusColor(statusColors.low);
+            }
+          })
+          .catch((err) => {
+            toastAlert("Error fetching envelope info.");
+            navigate("/envelopes");
+            console.error(err);
           });
-          setRemaining(response.data.maxLimit - response.data.balance);
-          if (response.data.maxLimit - response.data.balance < 100) {
-            setStatusColor(statusColors.low);
-          }
-        })
-        .catch((err) => {
-          if (err.response.data)
-          console.error(err);
-        });
 
-      //fetch transactions
-      axios
-        .get(`http://localhost:8080/transactions/envelope/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
-        .then((response) => {
-          if (
-            response.data.body ===
-            `Transaction with Envelope id ${id} does not exist`
-          ) {
-            setTransactions([]);
-          } else {
-            let fetchedTransactions = [];
-            for (let i = 0; i < response.data.body.length; i++) {
-              let transaction = response.data.body[i];
-              let newTransaction = {
-                transactionId: transaction.transactionId,
-                title: transaction.title,
-                transactionAmount: transaction.transactionAmount,
-                datetime: new Date(transaction.datetime),
-                transactionDescription: transaction.transactionDescription,
-                category: transaction.category,
-              };
-              fetchedTransactions.push(newTransaction);
+        //fetch transactions
+        axios
+          .get(`http://localhost:8080/transactions/envelope/${id}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+          .then((response) => {
+            if (
+              response.data.body ===
+              `Transaction with Envelope id ${id} does not exist`
+            ) {
+              setTransactions([]);
+            } else {
+              let fetchedTransactions = [];
+              for (let i = 0; i < response.data.body.length; i++) {
+                let transaction = response.data.body[i];
+                let newTransaction = {
+                  transactionId: transaction.transactionId,
+                  title: transaction.title,
+                  transactionAmount: transaction.transactionAmount,
+                  datetime: new Date(transaction.datetime),
+                  transactionDescription: transaction.transactionDescription,
+                  category: transaction.category,
+                };
+                fetchedTransactions.push(newTransaction);
+              }
+              setTransactions(fetchedTransactions);
             }
-            setTransactions(fetchedTransactions);
-            toastAlert("Welcome!");
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
 
-      // get envelope balance history
-      axios
-        .get(`http://localhost:8080/envelopes/history/${id}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
-        .then((response) => {
-          if (response.data.body === `Envelope history with Envelope id ${id} does not exist`) {
-            setEnvelopeHistory([]);
-          }
-          else{
-            let fetchedEnvelopeHistory = [];
-            for (let i = 0; i < response.data.length; i++) {
-              let envelopeHistory = response.data[i];
-              let newEnvelopeHistory = {
-                amountHistoryId: envelopeHistory.amountHistoryId,
-                envelope: envelopeHistory.envelope,
-                transaction: envelopeHistory.transaction,
-                envelopeAmount: envelopeHistory.envelopeAmount,
-              };
-              fetchedEnvelopeHistory.push(newEnvelopeHistory);
+        // get envelope balance history
+        axios
+          .get(`http://localhost:8080/envelopes/history/${id}`, {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+          .then((response) => {
+            if (response.data.body === `Envelope history with Envelope id ${id} does not exist`) {
+              setEnvelopeHistory([]);
             }
-            setEnvelopeHistory(fetchedEnvelopeHistory);
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-        
-      /*
-      setTransactions([
-     {transactionId: 1, title: "Movie Outing", amount: -100, date: new Date("2022-03-05"), description: "Went to the movies with friends.",category: "Entertainment"},
-      {transactionId: 2, title: "Paycheck", amount: 500, date: new Date("2022-03-05"), description: "Bi-weekly paycheck.",category: "Income"},
-      {transactionId: 3, title: "Groceries", amount: -50, date: new Date("2025-01-09T13:48:27.697493"), description: "Groceries for the week.",category: "Food"},
-      {transactionId: 4, title: "Gas", amount: -25, date: new Date("2022-03-05"), description: "Filled up the car, then did a bunch of other stuff. Now, where was I? blah blah blah", category: "Transportation"},
-      {transactionId: 5, title: "Dinner", amount: -30, date: new Date("2022-03-05"), description: "Dinner with friends.", category: "Food"},
-      {transactionId: 6, title: "Paycheck", amount: 500, date: new Date("2021-03-05"), description: "Bi-weekly paycheck.", category: "Income"},
-    ]);
-    
-      
-      setEnvelope({envelopeID:0,user_id:1,envelope_description: "Basically Whatever Goes", max_limit: 4000, balance: 5000});
-
-      
-      setEnvelopeHistory([{
-        amount_history_id: 1,
-        envelope_id: 1,
-        transaction_id: 1,
-        envelope_amount: 5000
-      },{
-        amount_history_id: 2,
-        envelope_id: 1,
-        transaction_id: 2,
-        envelope_amount: 5500
-      },{
-        amount_history_id: 3,
-        envelope_id: 1,
-        transaction_id: 3,
-        envelope_amount: 5450
-      },{
-        amount_history_id: 4,
-        envelope_id: 1,
-        transaction_id: 4,
-        envelope_amount: 5425
-      },{
-        amount_history_id: 5,
-        envelope_id: 1,
-        transaction_id: 5,
-        envelope_amount: 5395
-      },{
-        amount_history_id: 6,
-        envelope_id: 1,
-        transaction_id: 6,
-        envelope_amount: 5895
-      }])
-      */
-
-      setLoading(false);
+            else{
+              let fetchedEnvelopeHistory = [];
+              for (let i = 0; i < response.data.length; i++) {
+                let envelopeHistory = response.data[i];
+                let newEnvelopeHistory = {
+                  amountHistoryId: envelopeHistory.amountHistoryId,
+                  envelope: envelopeHistory.envelope,
+                  transaction: envelopeHistory.transaction,
+                  envelopeAmount: envelopeHistory.envelopeAmount,
+                };
+                fetchedEnvelopeHistory.push(newEnvelopeHistory);
+              }
+              setEnvelopeHistory(fetchedEnvelopeHistory);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+          
+        setLoading(false);
+    }
     },[user])
-
 
     return (
       <>
@@ -446,9 +369,7 @@ export const DetailedEnvelope:React.FC = () =>{
                         <Divider />
                       </Grid2>
                       <Grid2 size={6}>
-                        <Typography variant="h5" >
-                          Remaining
-                        </Typography>
+                        <Typography variant="h5">Remaining</Typography>
                       </Grid2>
                       <Grid2 size={6}>
                         <Typography variant="h5">
@@ -617,6 +538,7 @@ export const DetailedEnvelope:React.FC = () =>{
                                   className="editButton"
                                   onClick={() => {
                                     setTransactiontoEdit(transaction);
+                                    setEdited(false);
                                     setOpenEdit(true);
                                   }}
                                 >
@@ -666,6 +588,8 @@ export const DetailedEnvelope:React.FC = () =>{
               onClose={() => {
                 handleCreateClose();
               }}
+              fullWidth
+              maxWidth="md"
             >
               <DialogTitle>
                 Spending from {envelope.envelopeDescription}
@@ -679,6 +603,7 @@ export const DetailedEnvelope:React.FC = () =>{
                     name="title"
                     label="Title"
                     required
+                    autoFocus
                     onChange={changeCreateTransactionValues}
                   />
                   <TextField
@@ -696,6 +621,11 @@ export const DetailedEnvelope:React.FC = () =>{
                     name="transactionAmount"
                     label="Amount"
                     type="number"
+                    slotProps={{
+                            input: {
+                              startAdornment:<InputAdornment position="start">$</InputAdornment>,
+                            },
+                          }}
                     helperText={
                       createAmountError
                         ? "Amount exceeds envelope balance."
@@ -754,6 +684,8 @@ export const DetailedEnvelope:React.FC = () =>{
               onClose={() => {
                 setOpenEdit(false);
               }}
+              fullWidth
+              maxWidth="sm"
             >
               <DialogTitle>Edit Transaction</DialogTitle>
               <DialogContent>
@@ -798,6 +730,7 @@ export const DetailedEnvelope:React.FC = () =>{
                 </Button>
                 <Button
                   disabled={
+                    !edited ||
                     transactiontoEdit.title === "" ||
                     transactiontoEdit.transactionDescription === "" ||
                     transactiontoEdit.category === ""
