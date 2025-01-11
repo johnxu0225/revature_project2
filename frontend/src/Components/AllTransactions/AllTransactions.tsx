@@ -107,7 +107,9 @@ export const AllTransactions: React.FC = () => {
 
 
                                     {/* Filter and Options buttons */}
-                                    <Button id="categoryButton" size="small" onClick={() => { setFilterMenu(true) }}>Filter</Button>
+                                    <Button id="categoryButton" size="small" onClick={() => { setFilterMenu(true) }}>
+                                        Filter {filteredCategory === "All" ? "" : `: ${filteredCategory}`}
+                                    </Button>
 
                                     {/* Menu for filtering transactions */}
                                     <Menu
