@@ -71,15 +71,18 @@ export const AddMoney: React.FC = () => {
         }).then((data) => {
             let temp = [];
             for (let i = 0; i < data.length; i++) {
-                temp.push({
-                    envelope_id: data[i].envelopeId,
-                    user_id: user.userId,
-                    envelope_description: data[i].envelopeDescription,
-                    balance: data[i].balance,
-                    max_limit: data[i].maxLimit,
-                    amount: "0",
-                    setAmount: null
-                });
+                // only show envelopes that belong to the user or if the user is a manager
+                if (user.role=== "ROLE_MANAGER" || data[i].user.userId === user.userId) {
+                    temp.push({
+                        envelope_id: data[i].envelopeId,
+                        user_id: data[i].user.userId,
+                        envelope_description: data[i].envelopeDescription,
+                        balance: data[i].balance,
+                        max_limit: data[i].maxLimit,
+                        amount: "0",
+                        setAmount: null
+                    });
+                }
             }
             setEnvs(temp);
         });

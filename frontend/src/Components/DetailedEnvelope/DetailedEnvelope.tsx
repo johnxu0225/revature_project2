@@ -208,16 +208,23 @@ export const DetailedEnvelope:React.FC = () =>{
             withCredentials: true,
           })
           .then((response) => {
-            setEnvelope({
-              envelopeId: response.data.envelope_id,
-              user: response.data.user,
-              envelopeDescription: response.data.envelopeDescription,
-              maxLimit: response.data.maxLimit,
-              balance: response.data.balance,
-            });
-            setRemaining((response.data.balance/response.data.maxLimit)*100);
-            if (response.data.balance < 100) {
-              setStatusColor(statusColors.low);
+            console.log(response);
+            if (response.data.user.userId !== user.userId) {
+              toastAlert("You do not have access to this envelope.");
+              navigate("/envelopes");
+            }
+            else{
+              setEnvelope({
+                envelopeId: response.data.envelope_id,
+                user: response.data.user,
+                envelopeDescription: response.data.envelopeDescription,
+                maxLimit: response.data.maxLimit,
+                balance: response.data.balance,
+              });
+              setRemaining((response.data.balance/response.data.maxLimit)*100);
+              if (response.data.balance < 100) {
+                setStatusColor(statusColors.low);
+              }
             }
           })
           .catch((err) => {
@@ -318,7 +325,7 @@ export const DetailedEnvelope:React.FC = () =>{
                 alignItems: "center",
                 maxWidth: { xs: "90%", md: "70%" },
               }}
-              id="mainContainer"
+              id="detailedContainer"
             >
               {/* Each subsequent child Grid2 element represents a row/column. Size of a row in a grid is 12, so we use size prop to adjust the width of the column. */}
               <Grid2
