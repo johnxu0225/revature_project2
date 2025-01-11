@@ -208,7 +208,7 @@ export const DetailedEnvelope:React.FC = () =>{
             withCredentials: true,
           })
           .then((response) => {
-            if (response.data.body.user.userId !== user.userId) {
+            if (user.role!="ROLE_MANAGER" && response.data.user.userId !== user.userId) {
               toastAlert("You do not have access to this envelope.");
               navigate("/envelopes");
             }

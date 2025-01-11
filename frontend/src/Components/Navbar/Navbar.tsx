@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
                 sx={{ color: "white", textDecorationColor: "white", cursor: "pointer" }} 
                 underline="always"
 
-                onClick={() => navigate("/envelopes")}
+                onClick={() => navigate("/transactions")}
               >
                 Activity
               </Link>
