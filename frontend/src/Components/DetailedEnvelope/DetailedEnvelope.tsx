@@ -13,7 +13,7 @@ import backendHost from "../../backendHost";
 
 export const DetailedEnvelope:React.FC = () =>{
 
-    const statusColors = { low: "#8b4dfe", high: "#23A455" };
+    const statusColors = { low: "#ffc400", high: "#23A455" };
     const [statusColor, setStatusColor] = useState(statusColors.high);
 
     const [envelope, setEnvelope] = useState<Envelope>({
@@ -222,7 +222,7 @@ export const DetailedEnvelope:React.FC = () =>{
                 balance: response.data.balance,
               });
               setRemaining((response.data.balance/response.data.maxLimit)*100);
-              if (response.data.balance < 100) {
+              if (response.data.balance < response.data.maxLimit/2) {
                 setStatusColor(statusColors.low);
               }
             }
@@ -387,7 +387,7 @@ export const DetailedEnvelope:React.FC = () =>{
                       </>
                     }
                   />
-                  {/* CardContent to display balance and max limit */}
+                  {/* CardContent to display max limit and remaining bar */}
                   <CardContent>
                     <Grid2
                       container
@@ -410,7 +410,7 @@ export const DetailedEnvelope:React.FC = () =>{
                       </Grid2>
                       {/* Remaining amount is calculated by dividing balance by limit, and taking as percentage */}
                       <Grid2 size={12}>
-                        <LinearProgress color="success" sx={{height:8}} variant="determinate" value={remaining}></LinearProgress>
+                        <LinearProgress color={statusColor === statusColors.low ? "warning": "success"} sx={{height:8}} variant="determinate" value={remaining}></LinearProgress>
                       </Grid2>
                     </Grid2>
                   </CardContent>

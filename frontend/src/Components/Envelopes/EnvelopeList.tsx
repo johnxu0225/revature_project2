@@ -5,6 +5,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import backendHost from "../../backendHost";
+import { AttachMoney } from "@mui/icons-material";
 
 interface UserData {
   userId: number;
@@ -37,10 +38,15 @@ export const EnvelopeList = () => {
 
   const loadEnvelopeList = async () => {
     try {
-      console.log(user);
-      console.log(user.userId);
+      let requestString = "";
+      if (user.role === "ROLE_MANAGER") {
+        requestString = `${backendHost}/envelopes`;
+      }
+      else{
+        requestString = `${backendHost}/envelopes/user/${user.userId}`;
+      }
       const response = await fetch(
-        `${backendHost}/envelopes/user/${user.userId}`,
+        requestString,
         {
           method: "GET",
           credentials: "include",
@@ -65,7 +71,9 @@ export const EnvelopeList = () => {
   return (
     <div className="envelope-container">
       <div className="envelope-title-group">
-        <p className="envelope-title">My Envelopes</p>
+        <p className="envelope-title">
+          {user.role === "ROLE_MANAGER" ? "All Envelopes" : "My Envelopes"}
+        </p>
         <Tooltip title="Add new envelope" placement="bottom" arrow>
           <IconButton
             aria-label="add"
@@ -75,19 +83,30 @@ export const EnvelopeList = () => {
             <AddCircleOutlineIcon fontSize="inherit" />
           </IconButton>
         </Tooltip>
+        <Tooltip title="Add Money" placement="bottom" arrow>
+          <IconButton
+            aria-label="add"
+            size="large"
+            onClick={() => navigate("/add")}
+          >
+            <AttachMoney fontSize="inherit" />
+          </IconButton>
+        </Tooltip>
       </div>
-	  <hr className = "envelope-hr"/>
+      <hr className="envelope-hr" />
       {/* No envelopes, prompts to create one */}
-      {envelopeList.length === 0 &&
+      {envelopeList.length === 0 && (
         <div>
           <p className="envelope-subtitle">You have no envelopes...</p>
-		  <br />
-          <p className="envelope-subtitle-sub">Create a new envelope by clicking the + above!</p>
+          <br />
+          <p className="envelope-subtitle-sub">
+            Create a new envelope by clicking the + above!
+          </p>
         </div>
-      }
+      )}
       <div className="envelope-row-group">
         {/* Shows if there are envelopes within the budget */}
-        {envelopeList.some((env) => env.balance >= env.maxLimit / 2) &&
+        {envelopeList.some((env) => env.balance >= env.maxLimit / 2) && (
           <div>
             <p className="envelope-subtitle">Within Budget</p>
             <div className="envelope-row">
@@ -107,9 +126,11 @@ export const EnvelopeList = () => {
               })}
             </div>
           </div>
-        }
+        )}
         {/* Shows if there are envelopes nearly used */}
-        {envelopeList.some((env) => env.balance > 0 && env.balance < env.maxLimit / 2) &&
+        {envelopeList.some(
+          (env) => env.balance > 0 && env.balance < env.maxLimit / 2
+        ) && (
           <div>
             <p className="envelope-subtitle">Nearly Used</p>
             <div className="envelope-row">
@@ -128,9 +149,9 @@ export const EnvelopeList = () => {
               })}
             </div>
           </div>
-        }
+        )}
         {/* Shows if there are envelopes over budget */}
-        {envelopeList.some((env) => env.balance <= 0) &&
+        {envelopeList.some((env) => env.balance <= 0) && (
           <div>
             <p className="envelope-subtitle">Over Budget</p>
             <div className="envelope-row">
@@ -149,7 +170,7 @@ export const EnvelopeList = () => {
               })}
             </div>
           </div>
-        }
+        )}
       </div>
     </div>
   );
