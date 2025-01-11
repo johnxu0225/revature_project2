@@ -76,6 +76,7 @@ public class EnvelopeService {
     public ResponseEntity<?> getAllEnvelopes() {
         List<Envelope> envelopes = envelopeRepository.findAll();
         logger.info("Retrieving all envelopes, Envelope count: {}", envelopes.size());
+        envelopes.forEach(envelope -> envelope.getUser().setPassword(null));
         return ResponseEntity.ok(envelopes);
     }
 
