@@ -432,7 +432,7 @@ export const DetailedEnvelope:React.FC = () =>{
 
 
                           {/* Filter and Options buttons */}
-                          <Button id="categoryButton" size="small"onClick={()=>{setFilterMenu(true)}}>Filter</Button>
+                          <Button id="categoryButton" size="small"onClick={()=>{setFilterMenu(true)}}>Filter{filteredCategory === "All" ? "" : `: ${filteredCategory}`}</Button>
         
                           {envelope.user !=null ?
                           <Button

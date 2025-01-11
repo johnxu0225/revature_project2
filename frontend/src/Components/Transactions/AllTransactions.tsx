@@ -359,7 +359,7 @@ export const AllTransactions: React.FC = () => {
                         <Button
                             variant="contained"
                             onClick={()=>{
-                                navigate(`/en/${transaction.envelope.envelopeId}`)
+                                navigate(`/envelope/${transaction.envelope.envelopeId}`)
                             }}
                           >
                            Envelope
