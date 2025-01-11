@@ -42,7 +42,13 @@ export const EnvelopeListCard: React.FC<IProps> = ({
   };
   return (
     <Card
-      sx={{ minWidth: 275, minHeight: 275, boxShadow: 1, borderRadius: 2 }}
+      sx={{
+        minWidth: 275,
+        minHeight: 275,
+        boxShadow: 1,
+        borderRadius: 2,
+        margin: 1,
+      }}
       variant="outlined"
       onClick={handleClick}
     >
