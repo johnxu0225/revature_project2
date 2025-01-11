@@ -217,4 +217,16 @@ public class EnvelopeService {
 
         return ResponseEntity.ok(savedTransaction);
     }
+
+    public ResponseEntity<?> getEnvelopeByUserId(Integer userId) {
+        logger.info("Retrieving envelope by user id: {}", userId);
+        //Check if user exists
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return ResponseEntity.badRequest().body("User does not exist");
+        }
+        List<Envelope> envelopes = envelopeRepository.findByUser_UserId(userId);
+        envelopes.forEach(envelope -> envelope.getUser().setPassword(null));
+        return ResponseEntity.ok(envelopes);
+    }
 }
