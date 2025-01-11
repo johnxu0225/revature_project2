@@ -5,7 +5,6 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import backendHost from "../../backendHost";
-import { AttachMoney } from "@mui/icons-material";
 
 interface UserData {
   userId: number;
