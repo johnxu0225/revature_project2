@@ -50,7 +50,7 @@ function App() {
           <Route path="/personalize" element={<Personalize />} />
           <Route path="/new_envelope" element={<CreateEnvelope />} />
           <Route path="/envelopes" element={<EnvelopeList />} />
-          <Route path="/en/:id" element={<DetailedEnvelope />} />
+          <Route path="/envelope/:id" element={<DetailedEnvelope />} />
           <Route path="/add" element={<AddMoney />} />
           <Route path="/users" element={<SeeUsers />} />
           <Route path="/transactions" element = {<AllTransactions />} />
