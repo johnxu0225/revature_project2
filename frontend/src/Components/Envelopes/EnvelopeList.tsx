@@ -83,15 +83,6 @@ export const EnvelopeList = () => {
             <AddCircleOutlineIcon fontSize="inherit" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Add Money" placement="bottom" arrow>
-          <IconButton
-            aria-label="add"
-            size="large"
-            onClick={() => navigate("/add")}
-          >
-            <AttachMoney fontSize="inherit" />
-          </IconButton>
-        </Tooltip>
       </div>
       <hr className="envelope-hr" />
       {/* No envelopes, prompts to create one */}
