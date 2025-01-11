@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useStore from "../../stores";
 import { UserInfo } from "../../stores";
 import { useNavigate } from "react-router-dom";
-import { Accordion, AccordionDetails, AccordionSummary, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, ListItem, Menu, MenuItem, Snackbar, Stack, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Card, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, IconButton, ListItem, Menu, MenuItem, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { CloseOutlined, ExpandCircleDown } from "@mui/icons-material";
 
@@ -210,16 +210,15 @@ export const AllTransactions: React.FC = () => {
   }, [user]);
 
   return (
-    <>
-      <br />
-      <br />
+    <Box sx={{ padding: "20px", height: "calc(100vh - 20px - 50px)" }}>
       <Grid2
         container
         spacing={2}
         sx={{
           margin: "auto",
-          alignItems: "center",
-          maxWidth: { xs: "90%", md: "70%" },
+          maxWidth: { xs: "90%", md: "75%" },
+          height: "100%",
+          overflow: "auto"
         }}
         id="transacationContainer"
       >
@@ -502,6 +501,6 @@ export const AllTransactions: React.FC = () => {
           })}
         </Menu>
       </Grid2>
-    </>
+    </Box>
   );
 };
