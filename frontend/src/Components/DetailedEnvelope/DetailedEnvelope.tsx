@@ -208,8 +208,7 @@ export const DetailedEnvelope:React.FC = () =>{
             withCredentials: true,
           })
           .then((response) => {
-            console.log(response);
-            if (response.data.user.userId !== user.userId) {
+            if (user.role!="ROLE_MANAGER" && response.data.user.userId !== user.userId) {
               toastAlert("You do not have access to this envelope.");
               navigate("/envelopes");
             }
@@ -433,7 +432,7 @@ export const DetailedEnvelope:React.FC = () =>{
 
 
                           {/* Filter and Options buttons */}
-                          <Button id="categoryButton" size="small"onClick={()=>{setFilterMenu(true)}}>Filter</Button>
+                          <Button id="categoryButton" size="small"onClick={()=>{setFilterMenu(true)}}>Filter{filteredCategory === "All" ? "" : `: ${filteredCategory}`}</Button>
         
                           {envelope.user !=null ?
                           <Button
