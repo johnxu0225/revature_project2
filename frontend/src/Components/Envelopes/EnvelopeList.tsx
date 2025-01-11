@@ -32,14 +32,19 @@ export const EnvelopeList = () => {
 
   const loadEnvelopeList = async () => {
     try {
-      const response = await fetch("http://localhost:8080/envelopes", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      console.log(user);
+      console.log(user.userId);
+      const response = await fetch(
+        `http://localhost:8080/envelopes/user/${user.userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       if (!response.ok) {
         console.log("Error fetching envelopes");
       }
