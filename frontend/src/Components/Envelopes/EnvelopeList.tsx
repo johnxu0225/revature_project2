@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useStore, { UserInfo } from "../../stores";
 import { EnvelopeListCard } from "./EnvelopeListCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { Button, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface UserData {
@@ -75,14 +75,13 @@ export const EnvelopeList = () => {
           </IconButton>
         </Tooltip>
       </div>
+	  <hr className = "envelope-hr"/>
       {/* No envelopes, prompts to create one */}
       {envelopeList.length === 0 &&
         <div>
-          <p className="envelope-subtitle">Create a new envelope now!</p><br />
-          <Button
-            variant="contained"
-            onClick={() => navigate("/new_envelope")}
-          >Create</Button>
+          <p className="envelope-subtitle">You have no envelopes...</p>
+		  <br />
+          <p className="envelope-subtitle-sub">Create a new envelope by clicking the + above!</p>
         </div>
       }
       <div className="envelope-row-group">
