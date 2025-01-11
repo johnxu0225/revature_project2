@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Butto
 import { useEffect, useState } from "react";
 import useStore, { UserInfo } from "../../stores";
 import backendHost from "../../backendHost";
+import axios from "axios";
 
 interface User {
     userId: number,
@@ -54,9 +55,36 @@ export default function () {
         });
     };
 
-    // const handlePromoteUser = (username: string) => {
+    const handlePromoteUser = (user: User) => {
+        let updatedUser = {
+            userId: user.userId,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email,
+            role: "ROLE_MANAGER",
+          }
 
-    // }
+        axios
+        .patch(`${backendHost}/users/role`, updatedUser,{
+            headers: {
+            Authorization: `Bearer ${u.token}`,
+            "Content-Type": "application/json",
+            },
+            withCredentials: true,
+        }).then((res) => {
+            console.log(res);
+            setUsers(users.map((u) => {
+                if (u.userId == user.userId) {
+                    return updatedUser;
+                }
+                return u;
+            }));
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    }
 
     return (
         <Box sx={{ width: "75vw", margin: "auto", paddingTop: "2rem" }}>
@@ -84,11 +112,11 @@ export default function () {
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell sx={{ width: "150px" }}>{user.role}</TableCell>
                                 <TableCell sx={{ width: "100px" }}>
-                                    {/* {user.role == "ROLE_EMPLOYEE" && //250px with both buttons
-                                        <Button variant="contained" color="secondary" sx={{ marginRight: "1rem" }}>
+                                    {user.role == "ROLE_EMPLOYEE" ? //250px with both buttons
+                                        <Button variant="contained" color="secondary" sx={{ marginRight: "1rem" }} onClick={() => handlePromoteUser(user)}>
                                             Promote
                                         </Button>
-                                    } */}
+                                        :<></>}
                                     {user.userId != u.userId &&
                                         <Button variant="contained" color="secondary" onClick={() => handleDeleteUser(user.username)}>
                                             Delete
