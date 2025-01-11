@@ -117,7 +117,7 @@ export const AddMoney: React.FC = () => {
                         label="Recieved From?"
                         fullWidth
                         margin="normal"
-                        onChange={(e) => setTitle(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                         required
                     />
                     <TextField
@@ -125,14 +125,14 @@ export const AddMoney: React.FC = () => {
                         fullWidth
                         margin="normal"
                         value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
                         required
                     />
                     <TextField
                         label="Description"
                         fullWidth
                         margin="normal"
-                        onChange={(e) => setDesc(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDesc(e.target.value)}
                         multiline
                         rows={4}
                         required
@@ -151,9 +151,9 @@ export const AddMoney: React.FC = () => {
                 <Box className="envelope-list" sx={{ maxHeight: '600px', overflowY: 'auto' }}>
                     {envs.map((env, index) => {
                         let color = "envelope-header-warning";
-                        if (env.balance == env.max_limit) {
+                        if (env.balance >= env.max_limit / 2) {
                             color = "envelope-header-good";
-                        } else if (env.balance < 0) {
+                        } else if (env.balance <= 0) {
                             color = "envelope-header-danger";
                         }
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useStore, { UserInfo } from "../../stores";
 import { EnvelopeListCard } from "./EnvelopeListCard";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface UserData {
@@ -75,56 +75,81 @@ export const EnvelopeList = () => {
           </IconButton>
         </Tooltip>
       </div>
+      {/* No envelopes, prompts to create one */}
+      {envelopeList.length === 0 &&
+        <div>
+          <p className="envelope-subtitle">Create a new envelope now!</p><br />
+          <Button
+            variant="contained"
+            onClick={() => navigate("/new_envelope")}
+          >Create</Button>
+        </div>
+      }
       <div className="envelope-row-group">
-        <p className="envelope-subtitle">Within Budget</p>
-        <div className="envelope-row">
-          {envelopeList.map((env) => {
-            console.log(env.balance, env.maxLimit);
-            // Within Budget - more than half balance remaining
-            if (env.balance >= env.maxLimit / 2) {
-              return (
-                <EnvelopeListCard
-                  key={env.envelopeId}
-                  colorClass={"envelope-header-good"}
-                  envelope={env}
-                  onClick={() => console.log(env.envelopeId)}
-                />
-              );
-            }
-          })}
-        </div>
-        <p className="envelope-subtitle">Nearly Used</p>
-        <div className="envelope-row">
-          {envelopeList.map((env) => {
-            // Nearly Used - less than half, but still non zero balance
-            if (env.balance > 0 && env.balance < env.maxLimit / 2) {
-              return (
-                <EnvelopeListCard
-                  key={env.envelopeId}
-                  colorClass={"envelope-header-warning"}
-                  envelope={env}
-                  onClick={() => console.log(env.envelopeId)}
-                />
-              );
-            }
-          })}
-        </div>
-        <p className="envelope-subtitle">Over Budget</p>
-        <div className="envelope-row">
-          {envelopeList.map((env) => {
-            // Over Budget - balance is zero or negative
-            if (env.balance <= 0) {
-              return (
-                <EnvelopeListCard
-                  key={env.envelopeId}
-                  colorClass={"envelope-header-danger"}
-                  envelope={env}
-                  onClick={() => console.log(env.envelopeId)}
-                />
-              );
-            }
-          })}
-        </div>
+        {/* Shows if there are envelopes within the budget */}
+        {envelopeList.some((env) => env.balance >= env.maxLimit / 2) &&
+          <div>
+            <p className="envelope-subtitle">Within Budget</p>
+            <div className="envelope-row">
+              {envelopeList.map((env) => {
+                console.log(env.balance, env.maxLimit);
+                // Within Budget - more than half balance remaining
+                if (env.balance >= env.maxLimit / 2) {
+                  return (
+                    <EnvelopeListCard
+                      key={env.envelopeId}
+                      colorClass={"envelope-header-good"}
+                      envelope={env}
+                      onClick={() => console.log(env.envelopeId)}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </div>
+        }
+        {/* Shows if there are envelopes nearly used */}
+        {envelopeList.some((env) => env.balance > 0 && env.balance < env.maxLimit / 2) &&
+          <div>
+            <p className="envelope-subtitle">Nearly Used</p>
+            <div className="envelope-row">
+              {envelopeList.map((env) => {
+                // Nearly Used - less than half, but still non zero balance
+                if (env.balance > 0 && env.balance < env.maxLimit / 2) {
+                  return (
+                    <EnvelopeListCard
+                      key={env.envelopeId}
+                      colorClass={"envelope-header-warning"}
+                      envelope={env}
+                      onClick={() => console.log(env.envelopeId)}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </div>
+        }
+        {/* Shows if there are envelopes over budget */}
+        {envelopeList.some((env) => env.balance <= 0) &&
+          <div>
+            <p className="envelope-subtitle">Over Budget</p>
+            <div className="envelope-row">
+              {envelopeList.map((env) => {
+                // Over Budget - balance is zero or negative
+                if (env.balance <= 0) {
+                  return (
+                    <EnvelopeListCard
+                      key={env.envelopeId}
+                      colorClass={"envelope-header-danger"}
+                      envelope={env}
+                      onClick={() => console.log(env.envelopeId)}
+                    />
+                  );
+                }
+              })}
+            </div>
+          </div>
+        }
       </div>
     </div>
   );
