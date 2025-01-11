@@ -69,7 +69,7 @@ export const EnvelopeList = () => {
           <IconButton
             aria-label="add"
             size="large"
-            onClick={() => navigate("/add")}
+            onClick={() => navigate("/new_envelope")}
           >
             <AddCircleOutlineIcon fontSize="inherit" />
           </IconButton>
