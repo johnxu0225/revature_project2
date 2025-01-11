@@ -11,8 +11,7 @@ import { useEffect } from "react";
 import SeeUsers from "./Components/SeeUsers/SeeUsers";
 import useStore from "./stores";
 import { Alert, Snackbar } from "@mui/material";
-import React from "react";
-import { AllTransactions } from "./Components/AllTransactions/AllTransactions";
+import { AllTransactions } from "./Components/Transactions/AllTransactions";
 
 function App() {
   const setUser = useStore((state) => state.setUser);
