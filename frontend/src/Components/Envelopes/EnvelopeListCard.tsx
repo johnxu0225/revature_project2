@@ -28,7 +28,7 @@ export const EnvelopeListCard: React.FC<IProps> = ({ colorClass, envelope }: IPr
 
 	// Horribly inefficient way to render different tiers of envelopes, but whatever
 	return (
-		<Card sx={{ minWidth: 275, minHeight: 275, boxShadow: 1, borderRadius: 2 }} variant="outlined">
+		<Card sx={{ minWidth: 275, minHeight: 275, boxShadow: 1, borderRadius: 2, margin: 1, }} variant="outlined">
 			<div className={colorClass}></div>
 			<CardContent>
 				<Typography variant="h5" component="div" sx={{ fontSize: 25 }}>
