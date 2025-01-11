@@ -2,6 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { CardActionArea } from "@mui/material";
 
 // lets go dude snake case and camel case in the same codebase???? gamign
 
@@ -44,7 +45,7 @@ export const EnvelopeListCard: React.FC<IProps> = ({
     <Card
       sx={{
         minWidth: 275,
-        minHeight: 275,
+        minHeight: 150,
         boxShadow: 1,
         borderRadius: 2,
         margin: 1,
@@ -52,15 +53,17 @@ export const EnvelopeListCard: React.FC<IProps> = ({
       variant="outlined"
       onClick={handleClick}
     >
-      <div className={colorClass}></div>
-      <CardContent>
-        <Typography variant="h5" component="div" sx={{ fontSize: 25 }}>
-          {envelope.envelopeDescription}
-        </Typography>
-        <Typography variant="h1" component="div" sx={{ fontSize: 25 }}>
-          {"$" + envelope.balance + "/$" + envelope.maxLimit}
-        </Typography>
-      </CardContent>
+      <CardActionArea sx = {{minHeight: 150, maxWidth: 275, position: 'fixed'}}>
+	  <div className={colorClass + " envelope-header-envpage"}></div>
+		<CardContent>
+			<Typography variant="h5" component="div" sx={{ fontSize: 25 }}>
+			{envelope.envelopeDescription}
+			</Typography>
+			<Typography variant="h1" component="div" sx={{ fontSize: 25 }}>
+			{"$" + envelope.balance + "/$" + envelope.maxLimit}
+			</Typography>
+		</CardContent>
+	  </CardActionArea>
     </Card>
   );
 };
