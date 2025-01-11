@@ -53,7 +53,7 @@ export const EnvelopeListCard: React.FC<IProps> = ({
       variant="outlined"
       onClick={handleClick}
     >
-      <CardActionArea sx = {{minHeight: 150, maxWidth: 275, position: 'fixed'}}>
+      <CardActionArea sx = {{minHeight: 150, maxWidth: 275}}>
 	  <div className={colorClass + " envelope-header-envpage"}></div>
 		<CardContent>
 			<Typography variant="h5" component="div" sx={{ fontSize: 25 }}>
