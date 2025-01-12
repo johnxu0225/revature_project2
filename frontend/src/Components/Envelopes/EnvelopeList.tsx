@@ -5,6 +5,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { IconButton, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import backendHost from "../../backendHost";
 
 interface UserData {
 	userId: number;
@@ -35,31 +36,31 @@ export const EnvelopeList = () => {
 		}
 	}, [user?.token]);
 
-	const loadEnvelopeList = async () => {
-		try {
-			console.log(user);
-			console.log(user.userId);
-			const response = await fetch(
-				`http://localhost:8080/envelopes/user/${user.userId}`,
-				{
-					method: "GET",
-					credentials: "include",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${user.token}`,
-					},
-				}
-			);
-			if (!response.ok) {
-				console.log("Error fetching envelopes");
-			}
-			const data = await response.json();
-			setEnvelopeList(data); // Update state
-			console.log(data);
-		} catch (error) {
-			console.error("Error fetching envelopes:", error);
-		}
-	};
+  const loadEnvelopeList = async () => {
+    try {
+      console.log(user);
+      console.log(user.userId);
+      const response = await fetch(
+        `${backendHost}/envelopes/user/${user.userId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        console.log("Error fetching envelopes");
+      }
+      const data = await response.json();
+      setEnvelopeList(data); // Update state
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching envelopes:", error);
+    }
+  };
 
 	// Horribly inefficient way to render different tiers of envelopes, but whatever
 	return (
