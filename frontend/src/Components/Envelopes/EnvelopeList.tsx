@@ -38,10 +38,15 @@ export const EnvelopeList = () => {
 
   const loadEnvelopeList = async () => {
     try {
-      console.log(user);
-      console.log(user.userId);
+      let requestString = "";
+      if (user.role === "ROLE_MANAGER") {
+        requestString = `${backendHost}/envelopes`;
+      }
+      else{
+        requestString = `${backendHost}/envelopes/user/${user.userId}`;
+      }
       const response = await fetch(
-        `${backendHost}/envelopes/user/${user.userId}`,
+        requestString,
         {
           method: "GET",
           credentials: "include",
@@ -66,7 +71,7 @@ export const EnvelopeList = () => {
 	return (
 		<div className="envelope-container">
 			<div className="envelope-title-group">
-				<p className="envelope-title">My Envelopes</p>
+				<p className="envelope-title">{user.role==="ROLE_MANAGER"?"All Envelopes":"My Envelopes"}</p>
 				<Tooltip title="Add new envelope" placement="bottom" arrow>
 					<IconButton
 						aria-label="add"
@@ -76,7 +81,7 @@ export const EnvelopeList = () => {
 						<AddCircleOutlineIcon fontSize="inherit" />
 					</IconButton>
 				</Tooltip>
-				<Tooltip title="Add new transactions" placement="bottom" arrow>
+				<Tooltip title="Add Money" placement="bottom" arrow>
 					<IconButton
 						aria-label="addtransact"
 						size="large"
