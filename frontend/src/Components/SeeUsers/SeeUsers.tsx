@@ -39,6 +39,7 @@ export default function () {
         }).then(body => {
             console.log(body);
             if (!body.hasOwnProperty("error")) {
+                body.sort((a: User, b: User) => a.userId - b.userId);
                 setUsers(body);
             }
         })
@@ -107,7 +108,7 @@ export default function () {
                 <TableCell>Username</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell sx={{ width: "150px" }}>Role</TableCell>
-                <TableCell sx={{ width: "100px" }}>Actions</TableCell>
+                <TableCell sx={{ width: "250px" }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -122,7 +123,7 @@ export default function () {
                   <TableCell sx={{ width: "150px" }}>
                     {user.role === "ROLE_MANAGER" ? "Manager" : "User"}
                   </TableCell>
-                  <TableCell sx={{ width: "100px" }}>
+                  <TableCell sx={{ width: "250px" }}>
                     {user.role == "ROLE_EMPLOYEE" ? ( //250px with both buttons
                       <Button
                         variant="contained"
