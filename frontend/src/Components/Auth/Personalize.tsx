@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, TextField, Button, Divider, FormControlLabel, Switch } from "@mui/material";
+import { Box, Typography, TextField, Button, Divider, FormControlLabel, Switch, Snackbar, Alert } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // To access passed props
 import "./Personalize.scss";
 import axios from "axios";
@@ -26,6 +26,7 @@ export const Personalize: React.FC = () => {
   });
   const navigate = useNavigate();
   const setSnackbar = useStore((state) => state.setSnackbar);
+  const [errorAlert, setErrorAlert] = useState({ open: false, message: "" });
   const [manager, setManager] = useState(false);
 
   const registerUser = async (data: UserData) => {
@@ -43,11 +44,19 @@ export const Personalize: React.FC = () => {
     } catch (error) {
       console.error("Error during registration:", error);
       // Handle error (e.g., show error message)
+      setErrorAlert({ open: true, message: "Error during registration!" });
     }
   };
 
   const handlePersonalizeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate the data
+    if (userData.firstName === "" || userData.lastName === "" || userData.email === "") {
+      setErrorAlert({ open: true, message: "Please fill out all fields!" });
+      return;
+    }
+
     // Combine data from both steps (Register and Personalize)
     const completeData = {
       username: userData.username,
@@ -158,6 +167,18 @@ export const Personalize: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+          
+                {/* Error Snackbar */}
+                      <Snackbar
+                              open={errorAlert.open}
+                              autoHideDuration={3000}
+                              onClose={()=>setErrorAlert({open: false, message: ""})}
+                              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                            >
+                              <Alert onClose={()=>setErrorAlert({open:false,message:""})} severity="error" sx={{ width: '100%' }}>
+                                {errorAlert.message}
+                              </Alert>
+                      </Snackbar>
     </Box>
   );
 };
