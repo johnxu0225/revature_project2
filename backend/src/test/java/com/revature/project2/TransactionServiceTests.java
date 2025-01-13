@@ -125,8 +125,6 @@ public class TransactionServiceTests {
 
      @Test
      void test_updateTransactionCategory(){
-         TransactionDTO updateTransaction = new TransactionDTO();
-         updateTransaction.setCategory("Bills");
          Transaction transaction = new Transaction();
          transaction.setEnvelopeHistories(new ArrayList<EnvelopeHistory>());
          transaction.setTitle("Title");
