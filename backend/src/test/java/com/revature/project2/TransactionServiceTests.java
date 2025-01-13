@@ -149,7 +149,6 @@ public class TransactionServiceTests {
          Assertions.assertTrue(savedTransaction.getTitle().equals("Title"));
 
          BusinessException ex1 = Assertions.assertThrows(BusinessException.class,  ()->transactionService.updateTransactionCategory(1, "Bills"));
-         updateTransaction.setCategory("");
          BusinessException ex2 = Assertions.assertThrows(BusinessException.class,  ()->transactionService.updateTransactionCategory(0, ""));
      }
 
