@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
     <AppBar position="static" id="appbar">
       <Toolbar>
         <Typography variant="h6" id="navbar-title" sx={{ flexGrow: 1 }}>
-          Project Name
+          Budget App
         </Typography>
         <div className="button-container">
           {user.loggedIn ? (
