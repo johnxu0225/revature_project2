@@ -22,10 +22,10 @@ public class Envelope {
     private double balance;
     @Column(nullable = false)
     private double maxLimit;
-    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Transaction> transactions;
-    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<EnvelopeHistory> envelopeHistories;
 
@@ -42,6 +42,7 @@ public class Envelope {
 
     @PreRemove
     private void removeFromUser(){
+        if (this.user == null) return;
         this.user.getEnvelopes().remove(this);
     }
 
