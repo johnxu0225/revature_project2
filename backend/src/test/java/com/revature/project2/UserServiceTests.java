@@ -99,9 +99,11 @@ public class UserServiceTests {
         UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.getUserByUsername("NotUser"));
     }
 
+
     @Test
     void test_deleteByUsername(){
         User user = new User("User","password","User@users.com","User","User", "Employee");
+        user.setEnvelopes(new ArrayList<>());
         when(userRepository.findByUsername("User")).thenReturn(Optional.of(user));
         when(userRepository.findByUsername("NotUser")).thenReturn(Optional.empty());
         ArgumentCaptor<User> userCapture = ArgumentCaptor.forClass(User.class);
@@ -111,6 +113,8 @@ public class UserServiceTests {
         Mockito.verify(userRepository).delete(Mockito.any(User.class));
         UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.deleteByUsername("NotUser"));
     }
+
+
 
     @Test
     void test_findAllUsers(){
