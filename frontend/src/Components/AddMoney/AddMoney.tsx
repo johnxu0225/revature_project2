@@ -93,6 +93,17 @@ export const AddMoney: React.FC = () => {
 
     // Error checks amount usage as envelopes fill
     useEffect(() => {
+
+
+
+        // check if amount set for any envelope exceeds the available limit (max limit - balance)
+        for (let i = 0; i < envs.length; i++) {
+            if (parseInt(envs[i].amount) > 0 && parseInt(envs[i].amount) > (envs[i].max_limit-envs[i].balance)) {
+                setEnableBtn(true);
+                setError(`Error: Amount for ${envs[i].envelope_description} exceeds available envelope limit`);
+                return
+            }
+        }
         const sum = envs.reduce((acc, env) => acc + parseInt(env.amount), 0);
         if (amount == "" && sum != 0) {
             setError("Error: Amount not set yet");
@@ -107,7 +118,7 @@ export const AddMoney: React.FC = () => {
                 setEnableBtn(true);
             }
         }
-    }, [envs, amount]);
+    }, [envs, amount, title, desc]);
 
     return (
         <Box className="main-add-money-container">

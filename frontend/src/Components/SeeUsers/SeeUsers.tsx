@@ -140,7 +140,7 @@ export default function () {
                     ) : (
                       <></>
                     )}
-                    {user.userId != u.userId && user.role == "ROLE_EMPLOYEE" && (
+                    {user.userId != u.userId && (
                       <Button
                         variant="contained"
                         color="secondary"
