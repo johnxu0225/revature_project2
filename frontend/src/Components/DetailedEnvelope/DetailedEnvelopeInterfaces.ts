@@ -16,7 +16,7 @@ export interface OutgoingTransaction {
 
 export interface Envelope {
   envelopeId: number;
-  user: any;
+  user: User;
   envelopeDescription: string;
   maxLimit: number;
   balance: number;
@@ -29,3 +29,11 @@ export interface EnvelopeHistory {
   envelopeAmount: number;
 }
 
+export interface User {
+  userId: number,
+	firstName: string,
+	lastName: string
+	username: string,
+  email: string,
+	role: string,
+}

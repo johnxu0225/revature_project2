@@ -121,69 +121,90 @@ export const AddMoney: React.FC = () => {
     }, [envs, amount, title, desc]);
 
     return (
-        <Box className="main-add-money-container">
-            <Box className="add-money-container">
-                <Typography variant="h3" gutterBottom>
-                    Add Money
-                </Typography>
-                <form onSubmit={handleForm} className="add-money-form">
-                    <TextField
-                        label="Recieved From?"
-                        fullWidth
-                        margin="normal"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
-                        required
-                    />
-                    <TextField
-                        label="Amount"
-                        fullWidth
-                        margin="normal"
-                        value={amount}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
-                        required
-                    />
-                    <TextField
-                        label="Description"
-                        fullWidth
-                        margin="normal"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDesc(e.target.value)}
-                        multiline
-                        rows={4}
-                        required
-                    />
-                    <Button type="submit" variant="contained" color="primary" disabled={enableBtn}>
-                        Add Money
-                    </Button>
-                </form>
-            </Box>
-            <Box className="add-envelope-container" sx={{ width: {xs:"100%"} }}>
-                <Box>
-                    <Typography variant="h5" sx={{ color: "red", margin: "auto", width: "fit-content" }}>
-                        {error}
-                    </Typography>
-                </Box>
-                <Box className="envelope-list" sx={{ maxHeight: '600px', overflowY: 'auto' }}>
-                    {envs.map((env, index) => {
-                        let color = "envelope-header-warning";
-                        if (env.balance >= env.max_limit / 2) {
-                            color = "envelope-header-good";
-                        } else if (env.balance <= 0) {
-                            color = "envelope-header-danger";
-                        }
-
-                        return (
-                            <div style={{ height: "fit-content" }} key={index}>
-                                <EnvelopeListCard 
-                                    colorClass={color} 
-                                    envelope={env} 
-                                    onAmountChange={(newAmount) => handleAmountChange(index, newAmount)}
-                                    
-                                />
-                            </div>
-                        );
-                    })}
-                </Box>
-            </Box>
+      <Box className="main-add-money-container">
+        <Box className="add-money-container">
+          <Typography variant="h3" gutterBottom>
+            Add Money
+          </Typography>
+          <Typography variant="h5" sx ={{fontSize:{xs:"80%",md:"100%"}}}gutterBottom>
+            Add incoming money information below, then allocate it to your envelopes as needed.
+          </Typography>
+          <form onSubmit={handleForm} className="add-money-form">
+            <TextField
+              label="Recieved From?"
+              fullWidth
+              margin="normal"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setTitle(e.target.value)
+              }
+              required
+            />
+            <TextField
+              label="Amount"
+              fullWidth
+              margin="normal"
+              value={amount}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setAmount(e.target.value)
+              }
+              required
+            />
+            <TextField
+              label="Description"
+              fullWidth
+              margin="normal"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setDesc(e.target.value)
+              }
+              multiline
+              rows={4}
+              required
+            />
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={enableBtn}
+            >
+              Add Money
+            </Button>
+          </form>
         </Box>
+        <Box className="add-envelope-container" sx={{ width: { xs: "100%" } }}>
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{ color: "red", margin: "auto", width: "fit-content" }}
+            >
+              {error}
+            </Typography>
+          </Box>
+          <Box
+            className="envelope-list"
+            sx={{ maxHeight: "600px", overflowY: "auto" }}
+          >
+            {envs.map((env, index) => {
+              let color = "envelope-header-warning";
+              if (env.balance >= env.max_limit / 2) {
+                color = "envelope-header-good";
+              } else if (env.balance <= 0) {
+                color = "envelope-header-danger";
+              }
+
+              return (
+                <div style={{ height: "fit-content" }} key={index}>
+                  <EnvelopeListCard
+                    colorClass={color}
+                    envelope={env}
+                    onAmountChange={(newAmount) =>
+                      handleAmountChange(index, newAmount)
+                    }
+                  />
+                </div>
+              );
+            })}
+          </Box>
+        </Box>
+      </Box>
     );
 }

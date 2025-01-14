@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 import useStore from "../../stores";
-import { Box, Card, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from "@mui/material";
+import { Box, Card, Drawer, IconButton, List, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from "@mui/material";
 import { AccountCircle, AttachMoney, MailOutline, MenuOpen } from "@mui/icons-material";
 
 
@@ -32,7 +32,7 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static" id="appbar">
+    <AppBar position="sticky" id="appbar">
       <Toolbar>
         {/* Mobile menu button */}
         {user.loggedIn && (
@@ -100,16 +100,16 @@ export const Navbar: React.FC = () => {
                   Users
                 </Link>
               )}
-
-              <IconButton
-                size="large"
-                color="inherit"
-                id="user-menu"
-                onClick={() => setUserMenu(true)}
-              >
-                <AccountCircle />
-              </IconButton>
-
+              <Tooltip title="User information">
+                <IconButton
+                  size="large"
+                  color="inherit"
+                  id="user-menu"
+                  onClick={() => setUserMenu(true)}
+                >
+                  <AccountCircle />
+                </IconButton>
+              </Tooltip>
               <Menu
                 anchorEl={document.getElementById("user-menu")}
                 open={userMenu}
@@ -123,7 +123,9 @@ export const Navbar: React.FC = () => {
                   <Typography variant="h6">
                     {user.firstName} {user.lastName}
                   </Typography>
-                  <Typography variant="subtitle1">{user.username}</Typography>
+                  <Tooltip title="Username">
+                    <Typography variant="subtitle1">{user.username}</Typography>
+                  </Tooltip>
                   {user.role === "ROLE_MANAGER" ? (
                     <Typography variant="subtitle2">Manager</Typography>
                   ) : (

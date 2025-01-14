@@ -74,17 +74,17 @@ export const CreateEnvelope: React.FC = () => {
             {/* Left Side: Text */}
             <Box className="env-text">
                 <Typography variant="h3" gutterBottom>
-                    Start Your Budget Now!
+                    Let's get started!
                 </Typography>
                 <Typography variant="body1">
-                    Filling out a budget form is{" "}
+                    Creating an envelope is{" "}
                     <span className="highlight-text">super simple </span>
                     and helps you stay on top of your finances! Start by{" "}
-                    <span className="highlight-text">giving your budget a name</span>, like{" "}
+                    <span className="highlight-text">giving your envelope a name</span>, like{" "}
                     <span className="highlight-text">"Grocery Fund"</span> or{" "}
                     <span className="highlight-text">"Vacation Dreams"</span>,{" "}
                     to make it personal and fun. Then, add your
-                    <span className="highlight-text">current balance so you know exactly where you stand</span>.{" "}
+                    <span className="highlight-text"> current balance so you know exactly where you stand</span>.{" "}
                     Finally, set a{" "}
                     <span className="highlight-text">spending limit to keep things in check</span>{" "}
                     and make sure your money works for you.

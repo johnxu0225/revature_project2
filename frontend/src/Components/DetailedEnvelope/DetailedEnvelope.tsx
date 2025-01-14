@@ -18,7 +18,7 @@ export const DetailedEnvelope:React.FC = () =>{
 
     const [envelope, setEnvelope] = useState<Envelope>({
       envelopeId: 0,
-      user: null,
+      user: { userId: 0, username: "", role: "", firstName: "", lastName: "", email: "" },
       envelopeDescription: "",
       maxLimit: 0,
       balance: 0,
@@ -375,7 +375,7 @@ export const DetailedEnvelope:React.FC = () =>{
                               variant="h4"
                               sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
-                              {envelope.envelopeDescription}
+                              {envelope.envelopeDescription} {envelope.user.userId !== user.userId ? `(${envelope.user.firstName} ${envelope.user.lastName})` : ""}
                             </Typography>
                           </ListItem>
                           <ListItem
@@ -429,6 +429,7 @@ export const DetailedEnvelope:React.FC = () =>{
                           value={remaining}
                         ></LinearProgress>
                       </Grid2>
+
                     </Grid2>
                   </CardContent>
                 </Card>
@@ -633,7 +634,7 @@ export const DetailedEnvelope:React.FC = () =>{
                                   <Stack
                                     direction={{
                                       xs: "column-reverse",
-                                      md: "row",
+                                      lg: "row",
                                     }}
                                     sx={{
                                       justifyContent: "space-between",

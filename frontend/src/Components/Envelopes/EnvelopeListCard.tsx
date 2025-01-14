@@ -47,7 +47,7 @@ export const EnvelopeListCard: React.FC<IProps> = ({
   return (
     <Card
       sx={{
-        minWidth: 275,
+        minWidth: { xs: 200, md: 275 },
         minHeight: 150,
         boxShadow: 1,
         borderRadius: 2,
