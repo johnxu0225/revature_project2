@@ -107,7 +107,7 @@ export default function () {
                 <TableCell>Name</TableCell>
                 <TableCell>Username</TableCell>
                 <TableCell>Email</TableCell>
-                <TableCell sx={{ width: "150px" }}>Role</TableCell>
+                <TableCell sx={{ width: "250px" }}>Role</TableCell>
                 <TableCell sx={{ width: "250px" }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -120,7 +120,7 @@ export default function () {
                   </TableCell>
                   <TableCell>{user.username}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell sx={{ width: "150px" }}>
+                  <TableCell sx={{ width: "250px" }}>
                     {user.role === "ROLE_MANAGER" ? "Manager" : "User"}
                   </TableCell>
                   <TableCell sx={{ width: "250px" }}>
@@ -140,7 +140,7 @@ export default function () {
                     ) : (
                       <></>
                     )}
-                    {user.userId != u.userId && (
+                    {user.userId != u.userId && user.role == "ROLE_EMPLOYEE" && (
                       <Button
                         variant="contained"
                         color="secondary"
