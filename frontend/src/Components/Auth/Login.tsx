@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Divider, Snackbar, Alert } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
 	const setUser = useStore((state) => state.setUser);
+  const user = useStore((state) => state.user);
   const setSnackbar = useStore((state) => state.setSnackbar);
   const [errorAlert, setErrorAlert] = useState(false);
 
@@ -54,6 +55,12 @@ export const Login: React.FC = () => {
       console.error("Login failed:", err);
     }
   };
+
+  useEffect(()=>{
+    if(user.loggedIn){
+      navigate("/envelopes");
+    }
+  },[user]);
 
   return (
     <Box className="login-container">
