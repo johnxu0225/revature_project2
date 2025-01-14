@@ -24,7 +24,7 @@ export const EnvelopeListCard: React.FC<IProps> = ({ colorClass, envelope, onAmo
 
 	return (
     <Card
-      sx={{ minWidth: 275, minHeight: 275, boxShadow: 1, borderRadius: 2 }}
+      sx={{ maxWidth: {xs:200,md:275}, minHeight: 275, boxShadow: 1, borderRadius: 2 }}
       variant="outlined"
     >
       <div className={colorClass}></div>

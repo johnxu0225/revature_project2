@@ -10,7 +10,6 @@
 }
 
 .button-container {
-  display: flex;
   align-items: center;
   gap: 20px; 
 }
@@ -38,9 +37,11 @@
 }
 
 
-/* Hide Navbar in Mobile View */
+/* Hide Navbar in Mobile View 
 @media (max-width: 768px) {
   #appbar {
     display: none;
   }
 }
+
+*/

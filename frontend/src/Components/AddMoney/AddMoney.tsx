@@ -156,7 +156,7 @@ export const AddMoney: React.FC = () => {
                     </Button>
                 </form>
             </Box>
-            <Box className="add-envelope-container">
+            <Box className="add-envelope-container" sx={{ width: {xs:"100%"} }}>
                 <Box>
                     <Typography variant="h5" sx={{ color: "red", margin: "auto", width: "fit-content" }}>
                         {error}
@@ -177,6 +177,7 @@ export const AddMoney: React.FC = () => {
                                     colorClass={color} 
                                     envelope={env} 
                                     onAmountChange={(newAmount) => handleAmountChange(index, newAmount)}
+                                    
                                 />
                             </div>
                         );
