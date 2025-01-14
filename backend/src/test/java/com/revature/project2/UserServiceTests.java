@@ -103,7 +103,7 @@ public class UserServiceTests {
     @Test
     void test_deleteByUsername(){
         User user = new User("User","password","User@users.com","User","User", "Employee");
-        user.setEnvelopes(new ArrayList<>());
+        user.setEnvelopes(new ArrayList<>()); // setting list of envelopes to empty
         when(userRepository.findByUsername("User")).thenReturn(Optional.of(user));
         when(userRepository.findByUsername("NotUser")).thenReturn(Optional.empty());
         ArgumentCaptor<User> userCapture = ArgumentCaptor.forClass(User.class);
