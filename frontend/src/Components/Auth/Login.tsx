@@ -76,9 +76,9 @@ export const Login: React.FC = () => {
           spending, setting goals, and keeping you on top of your finances—all
           in one easy place. With features like{" "}
           <span className="highlight-text">
-            custom budgets, bill reminders,{" "}
+            custom envelopes, transaction tracking,{" "}
           </span>
-          and <span className="highlight-text">real-time updates, </span> they
+          and <span className="highlight-text">balance history, </span> they
           help you make smarter choices and{" "}
           <span className="highlight-text">
             take control of your finances effortlessly!

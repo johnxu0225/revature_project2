@@ -127,7 +127,7 @@ export const AddMoney: React.FC = () => {
             Add Money
           </Typography>
           <Typography variant="h5" sx ={{fontSize:{xs:"80%",md:"100%"}}}gutterBottom>
-            Add incoming money information below, then allocate it to your envelopes as needed.
+            Add incoming money information below, then allocate amount to {user.role==="ROLE_MANAGER"?"all":"your"} envelopes as needed.
           </Typography>
           <form onSubmit={handleForm} className="add-money-form">
             <TextField
