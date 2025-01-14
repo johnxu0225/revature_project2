@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Divider, Snackbar, Alert } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
 	const setUser = useStore((state) => state.setUser);
+  const user = useStore((state) => state.user);
   const setSnackbar = useStore((state) => state.setSnackbar);
   const [errorAlert, setErrorAlert] = useState(false);
 
@@ -55,6 +56,12 @@ export const Login: React.FC = () => {
     }
   };
 
+  useEffect(()=>{
+    if(user.loggedIn){
+      navigate("/envelopes");
+    }
+  },[user]);
+
   return (
     <Box className="login-container">
       {/* Left Side: Text */}
@@ -69,9 +76,9 @@ export const Login: React.FC = () => {
           spending, setting goals, and keeping you on top of your finances—all
           in one easy place. With features like{" "}
           <span className="highlight-text">
-            custom budgets, bill reminders,{" "}
+            custom envelopes, transaction tracking,{" "}
           </span>
-          and <span className="highlight-text">real-time updates, </span> they
+          and <span className="highlight-text">balance history, </span> they
           help you make smarter choices and{" "}
           <span className="highlight-text">
             take control of your finances effortlessly!

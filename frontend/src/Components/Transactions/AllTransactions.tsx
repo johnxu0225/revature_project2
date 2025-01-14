@@ -211,7 +211,7 @@ export const AllTransactions: React.FC = () => {
   }, [user]);
 
   return (
-    <Box sx={{ padding: "20px", height: "calc(100vh - 20px - 50px)" }}>
+    <Box sx={{ padding: "20px"}}>
       <Grid2
         container
         spacing={2}
@@ -296,7 +296,7 @@ export const AllTransactions: React.FC = () => {
                             <Stack
                               direction={{
                                 xs: "column-reverse",
-                                md: "row",
+                                lg: "row",
                               }}
                               sx={{
                                 justifyContent: "space-between",

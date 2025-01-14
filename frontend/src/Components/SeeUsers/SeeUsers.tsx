@@ -96,7 +96,7 @@ export default function () {
 
     return (
       <Box sx={{ width: "75vw", margin: "auto", paddingTop: "2rem" }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" sx={{fontWeight:"bold"}} gutterBottom>
           All Users
         </Typography>
         <TableContainer component={Paper}>
@@ -140,7 +140,7 @@ export default function () {
                     ) : (
                       <></>
                     )}
-                    {user.userId != u.userId && user.role == "ROLE_EMPLOYEE" && (
+                    {user.userId != u.userId && (
                       <Button
                         variant="contained"
                         color="secondary"

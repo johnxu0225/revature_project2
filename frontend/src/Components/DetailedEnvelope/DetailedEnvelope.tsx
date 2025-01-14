@@ -13,12 +13,12 @@ import backendHost from "../../backendHost";
 
 export const DetailedEnvelope:React.FC = () =>{
 
-    const statusColors = { low: "#ffc400", high: "#23A455" };
+    const statusColors = { low: "#ffc400", high: "#23A455", empty: "#ff1744" };
     const [statusColor, setStatusColor] = useState(statusColors.high);
 
     const [envelope, setEnvelope] = useState<Envelope>({
       envelopeId: 0,
-      user: null,
+      user: { userId: 0, username: "", role: "", firstName: "", lastName: "", email: "" },
       envelopeDescription: "",
       maxLimit: 0,
       balance: 0,
@@ -189,7 +189,11 @@ export const DetailedEnvelope:React.FC = () =>{
           setAllCategories([...new Set([...allCategories, response.data.category])]);
           setRemaining(((envelope.balance+response.data.transactionAmount)/envelope.maxLimit)*100);
           toastAlert("Transaction created successfully!");
-          console.log(envelopeHistory);
+          if (envelope.balance + response.data.transactionAmount === 0) {
+             setStatusColor(statusColors.empty);
+           } else if (envelope.balance + response.data.transactionAmount < response.data.maxLimit / 2) {
+             setStatusColor(statusColors.low);
+           }
         }).catch((err) => {
           toastAlert("Error creating transaction.");
           console.error(err);
@@ -223,9 +227,13 @@ export const DetailedEnvelope:React.FC = () =>{
                 balance: response.data.balance,
               });
               setRemaining((response.data.balance/response.data.maxLimit)*100);
-              if (response.data.balance < response.data.maxLimit/2) {
+              if (response.data.balance === 0) {
+                setStatusColor(statusColors.empty);
+              }
+              else if (response.data.balance < response.data.maxLimit/2) {
                 setStatusColor(statusColors.low);
               }
+              
             }
           })
           .catch((err) => {
@@ -367,7 +375,7 @@ export const DetailedEnvelope:React.FC = () =>{
                               variant="h4"
                               sx={{ fontWeight: "bold", textAlign: "center" }}
                             >
-                              {envelope.envelopeDescription}
+                              {envelope.envelopeDescription} {envelope.user.userId !== user.userId ? `(${envelope.user.firstName} ${envelope.user.lastName})` : ""}
                             </Typography>
                           </ListItem>
                           <ListItem
@@ -421,6 +429,7 @@ export const DetailedEnvelope:React.FC = () =>{
                           value={remaining}
                         ></LinearProgress>
                       </Grid2>
+
                     </Grid2>
                   </CardContent>
                 </Card>
@@ -625,7 +634,7 @@ export const DetailedEnvelope:React.FC = () =>{
                                   <Stack
                                     direction={{
                                       xs: "column-reverse",
-                                      md: "row",
+                                      lg: "row",
                                     }}
                                     sx={{
                                       justifyContent: "space-between",
